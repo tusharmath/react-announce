@@ -15,7 +15,7 @@ export const createDeclarative = (func, ...flow) => {
     const component = last(args)
     return decorate({
       flow: [asStream, ...flow],
-      override: {
+      overrides: {
         getComponentStream: function (stream) {
           this.addDisposable(func.call(this, stream, ...params))
         }
