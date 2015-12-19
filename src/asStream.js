@@ -8,7 +8,7 @@ import {filter, partial, each, isFunction, get} from 'lodash'
 import {BehaviorSubject} from 'rx'
 
 const isDisposable = i => isFunction(get(i, 'dispose'))
-const addListener = (component, event, listener) => {
+export const addEventListener = (component, event, listener) => {
   const defaultListener = component.prototype[event]
   component.prototype[event] = function (...args) {
     listener.apply(this, args)
@@ -16,10 +16,11 @@ const addListener = (component, event, listener) => {
       defaultListener.apply(this, args)
     }
   }
+  return component
 }
 export const asStream = (component) => {
   const prototype = component.prototype
-  const listen = partial(addListener, component)
+  const listen = partial(addEventListener, component)
   const stream = new BehaviorSubject({context: null, event: null, args: null})
   const disposables = new WeakMap()
   const addDisposable = function (...args) {

@@ -4,9 +4,9 @@
 
 'use strict'
 
-import {asStream} from './asStream'
+import {asStream, addEventListener} from './asStream'
 import {createDeclarative} from './createDeclarative'
 
 export default {
-  asStream, createDeclarative
+  asStream, createDeclarative, addEventListener
 }
