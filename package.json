@@ -1,0 +1,15 @@
+{
+  "name": "react-moto",
+  "version": "1.0.0",
+  "description": "a declarative approach to writing react components",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "tusharmath@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "rx": "^4.0.7"
+  }
+}
