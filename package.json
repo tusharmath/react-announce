@@ -1,5 +1,5 @@
 {
-  "name": "react-moto",
+  "name": "react-announce",
   "version": "0.0.0",
   "description": "a declarative approach to writing react components",
   "main": ".dist/index.js",
