@@ -6,7 +6,7 @@
 
 import test from 'ava'
 import 'babel-core/register'
-import {asStream} from '../index'
+import {asStream} from '../src/index'
 
 test('disposes via addDisposable()', t => {
   const events = []

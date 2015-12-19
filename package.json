@@ -2,9 +2,10 @@
   "name": "react-moto",
   "version": "1.0.0",
   "description": "a declarative approach to writing react components",
-  "main": "index.js",
+  "main": ".dist/index.js",
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "prepublish": "node ./node_modules/babel/bin/babel.js src --out-dir .dist"
   },
   "author": "tusharmath@gmail.com",
   "license": "ISC",

@@ -4,8 +4,8 @@
 
 'use strict'
 
-import {asStream} from './src/asStream'
-import {createDeclarative} from './src/createDeclarative'
+import {asStream} from './asStream'
+import {createDeclarative} from './createDeclarative'
 
 export default {
   asStream, createDeclarative
