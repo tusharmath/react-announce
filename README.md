@@ -12,5 +12,5 @@ npm i react-announce --save
 
 ## Plugins
 
-* [react-announce-connect](/tusharmath/react-announce-connect)
-* [react-announce-collapse](/tusharmath/react-announce-collapse)
+* [react-announce-connect](https://github.com/tusharmath/react-announce-connect)
+* [react-announce-collapse](https://github.com/tusharmath/react-announce-collapse)
