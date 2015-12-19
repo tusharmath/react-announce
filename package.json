@@ -4,12 +4,15 @@
   "description": "a declarative approach to writing react components",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "ava"
   },
   "author": "tusharmath@gmail.com",
   "license": "ISC",
   "dependencies": {
     "lodash": "^3.10.1",
     "rx": "^4.0.7"
+  },
+  "devDependencies": {
+    "ava": "^0.8.0"
   }
 }
