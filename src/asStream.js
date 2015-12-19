@@ -20,15 +20,15 @@ const addListener = (component, event, listener) => {
 export const asStream = (component) => {
   const prototype = component.prototype
   const listen = partial(addListener, component)
-  const stream = prototype.lifeCycleStream = new BehaviorSubject({context: null, event: null, args: null})
-  prototype.disposables = new WeakMap()
-  prototype.addDisposable = function (...disposables) {
-    filter(disposables, isDisposable).forEach(x => prototype.disposables.get(this).push(x))
+  const stream = new BehaviorSubject({context: null, event: null, args: null})
+  const disposables = new WeakMap()
+  const addDisposable = function (...args) {
+    filter(args, isDisposable).forEach(x => disposables.get(this).push(x))
   }
   listen('componentWillMount', function (...args) {
-    prototype.disposables.set(this, [])
+    disposables.set(this, [])
     stream.onNext({context: this, event: 'WILL_MOUNT', args})
-    this.getComponentStream(stream.filter(x => x.context === this))
+    this.getComponentStream(stream.filter(x => x.context === this), addDisposable.bind(this))
   })
   listen('componentDidMount', function (...args) {
     stream.onNext({context: this, event: 'DID_MOUNT', args})
@@ -44,9 +44,10 @@ export const asStream = (component) => {
   })
   listen('componentWillUnmount', function (...args) {
     stream.onNext({context: this, event: 'WILL_UNMOUNT', args})
-    each(prototype.disposables.get(this), x => x.dispose())
-    prototype.disposables.delete(this)
+    each(disposables.get(this), x => x.dispose())
+    disposables.delete(this)
   })
 
   return component
 }
+

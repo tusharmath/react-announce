@@ -12,8 +12,8 @@ test('disposes via addDisposable()', t => {
   const events = []
   const Temp = asStream(
     class Temp {
-      getComponentStream (stateStream) {
-        this.addDisposable(stateStream.subscribe(x => events.push(x.event)))
+      getComponentStream (stateStream, dispose) {
+        dispose(stateStream.subscribe(x => events.push(x.event)))
       }
     })
   const tmp = new Temp()
@@ -37,8 +37,8 @@ test('addDisposable must support multiple args', t => {
   const events = []
   const Temp = asStream(
     class Temp {
-      getComponentStream (stateStream) {
-        this.addDisposable(
+      getComponentStream (stateStream, dispose) {
+        dispose(
           stateStream.subscribe(x => events.push(x.event)),
           stateStream.subscribe(x => events.push(x.event + '-SECOND')),
           stateStream.subscribe(x => events.push(x.event + '-THIRD'))
@@ -76,8 +76,8 @@ test('disposes only once', t => {
   var i = 0
   const Temp = asStream(
     class Temp {
-      getComponentStream (stateStream) {
-        this.addDisposable({dispose: () => events.push(i++)})
+      getComponentStream (stateStream, dispose) {
+        dispose({dispose: () => events.push(i++)})
       }
     })
   const t1 = new Temp()
@@ -100,8 +100,8 @@ test('create separate lifecycle streams per instance', t => {
         this.eventsContainer = eventsContainer
       }
 
-      getComponentStream (stateStream) {
-        this.addDisposable(stateStream.subscribe(x => {
+      getComponentStream (stateStream, dispose) {
+        dispose(stateStream.subscribe(x => {
           this.eventsContainer.push({event: x.event, instance: this.instance})
         }))
       }
