@@ -9,28 +9,34 @@ import {BehaviorSubject} from 'rx'
 
 import {decorate, isDisposable} from './utility'
 
-export const asStream = component => {
-  var disposables = []
-  const stream = new BehaviorSubject()
-  const onEvent = (event, ...args) => stream.onNext({event, args})
-  const addDisposable = (...args) => filter(args, isDisposable).forEach(i => disposables.push(i))
-
-  return decorate({
-    defaults: {addDisposable},
-    overrides: {
-      componentWillMount: function () {
-        onEvent('WILL_MOUNT')
-        this.getComponentStream(stream)
-      },
-      componentWillUnmount (...args) {
-        onEvent('WILL_UNMOUNT', ...args)
-        each(disposables, x => x.dispose())
-        disposables = []
-      },
-      componentDidMount: partial(onEvent, 'DID_MOUNT'),
-      componentWillReceiveProps: partial(onEvent, 'WILL_RECEIVE_PROPS'),
-      componentWillUpdate: partial(onEvent, 'WILL_UPDATE'),
-      componentDidUpdate: partial(onEvent, 'DID_UPDATE')
+export const asStream = partial(decorate, {
+  defaults: {
+    addDisposable (...args) {
+      filter(args, isDisposable).forEach(i => this.disposables.push(i))
     }
-  }, component)
-}
+  },
+  overrides: {
+    componentWillMount (...args) {
+      this.stream = new BehaviorSubject({event: 'WILL_MOUNT', args})
+      this.disposables = []
+      this.getComponentStream(this.stream)
+    },
+    componentWillUnmount (...args) {
+      this.stream.onNext({event: 'WILL_UNMOUNT', args})
+      each(this.disposables, x => x.dispose())
+      this.stream.onCompleted()
+    },
+    componentDidMount (...args) {
+      this.stream.onNext({event: 'DID_MOUNT', args})
+    },
+    componentWillReceiveProps (...args) {
+      this.stream.onNext({event: 'WILL_RECEIVE_PROPS', args})
+    },
+    componentWillUpdate (...args) {
+      this.stream.onNext({event: 'WILL_UPDATE', args})
+    },
+    componentDidUpdate (...args) {
+      this.stream.onNext({event: 'DID_UPDATE', args})
+    }
+  }
+})
