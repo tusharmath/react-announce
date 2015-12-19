@@ -1,4 +1,4 @@
-# react-announce
+# react-announce [![Build Status](https://travis-ci.org/tusharmath/react-announce.svg)](https://travis-ci.org/tusharmath/react-announce)
 a declarative approach to creating react components.
 
 ## Purpose
