@@ -10,7 +10,7 @@ Reuse **component behaviors** via a declarative approach.
 npm i react-announce --save
 ```
 
-## Declaratives
+## Available Declaratives
 
 * [react-announce-connect](https://github.com/tusharmath/react-announce-connect)
 * [react-announce-collapse](https://github.com/tusharmath/react-announce-collapse)
