@@ -13,7 +13,7 @@ const addListener = (component, event, listener) => {
   component.prototype[event] = function (...args) {
     listener.apply(this, args)
     if (defaultListener) {
-      defaultListener()
+      defaultListener.apply(this, args)
     }
   }
 }
