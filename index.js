@@ -5,7 +5,8 @@
 'use strict'
 
 import {asStream} from './src/asStream'
+import {createDeclarative} from './src/createDeclarative'
 
 export default {
-  asStream
+  asStream, createDeclarative
 }
