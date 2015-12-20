@@ -106,5 +106,4 @@ class MyComponent extends Component {
 
 * [react-announce-connect](https://github.com/tusharmath/react-announce-connect): Attaches multiple source observables and applies the changes to a component's state.
 * [react-announce-collapse](https://github.com/tusharmath/react-announce-collapse): (WIP) A declarative that will help in auto hiding dropdowns and popups, when clicked outside of them or when **ESC** key is pressed.
-
-
+* [Need more?](https://github.com/tusharmath/react-announce/issues/new)
