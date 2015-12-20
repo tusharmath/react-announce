@@ -39,7 +39,7 @@ OUTPUT: With each event three params are being sent —
 
 ```
 
-#### getComponentStream(stream: Observable, dispose: function)
+### getComponentStream(stream: Observable, dispose: function)
 Exposes the component's lifecycle events as a stream. Events are available in the `event` property of the stream observable. Events include — `WILL_MOUNT`, `DID_MOUNT`, `WILL_RECEIVE_PROPS`, `WILL_UPDATE`, `DID_UPDATE`, `WILL_UNMOUNT`. This method is always called with context to the current instance of the component.
 
 One can attach any custom logic by filtering on any of the events such as —
@@ -70,6 +70,35 @@ class MyComponent extends Component {
 }
 ```
 In this example, we wouldn't want the `time` stream to be updating the state of the component once the component has been unmounted, so we use `dispose` function which can take in multiple params of stream type and dispose them one by one once the component is unmounted.
+
+## createDeclaration()
+This is a special utility method provided to write custom declaratives on top of react-announce. For instance if I want to create a timer declarative, that sets the time elapsed since component was mounted to the state of that particular component, then I can use it as follows —
+
+```javascript
+
+const timer = createDeclarative(function (stream, dispose, interval, stateProperty) {
+  
+  const time = Observable.interval(interval).map(Date.now)
+  dispose(
+    stream.filter(x => x.event === 'WILL_MOUNT')
+    .map(() => Date.now())
+    .combineLatest(time, (t1, t2) => t2 - t1)
+    .subscribe(x => {[stateProperty]: x})
+  )
+})
+
+/*
+Usage
+*/
+
+@timer(100, 'elapsedTime')
+class MyComponent extends Component {
+  render () {
+    return (<div>Time Elapsed: {this.state.elapsedTime}ms</div>)
+  }
+}
+// Keeps printing the elapsed time which gets updated ever 100ms
+```
 
 
 ## Available Declaratives
