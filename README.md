@@ -16,7 +16,7 @@ npm i react-announce --save
 Exposes component [life cycle](https://facebook.github.io/react/docs/component-specs.html#lifecycle-methods) events as a stream.
 
 ```javascript
-
+@asStream()
 class MyComponent extends Component {
   getComponentStream (stream) {
     stream.subscribe(x => console.log(x)
@@ -71,7 +71,7 @@ class MyComponent extends Component {
 ```
 In this example, we wouldn't want the `time` stream to be updating the state of the component once the component has been unmounted, so we use `dispose` function which can take in multiple params of stream type and dispose them one by one once the component is unmounted.
 
-## createDeclaration()
+### createDeclaration
 This is a special utility method provided to write custom declaratives on top of react-announce. For instance if I want to create a timer declarative, that sets the time elapsed since component was mounted to the state of that particular component, then I can use it as follows —
 
 ```javascript
@@ -100,6 +100,7 @@ class MyComponent extends Component {
 // Keeps printing the elapsed time which gets updated ever 100ms
 ```
 
+`createDeclarative` uses `@asStream` declarative and sets its `getComponentStream` method to your custom method.
 
 ## Available Declaratives
 
