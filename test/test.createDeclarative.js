@@ -35,8 +35,7 @@ test('multiple decoration', t => {
     })))
   })
 
-
-  const Mock1 = declaration('A1', 'B1', function Mock1 () {
+  const Mock1 = declaration('A1', 'B1')(function Mock1 () {
   })
   const Mock2 = declaration('A2', 'B2', function Mock2 () {
   })
