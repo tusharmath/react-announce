@@ -2,7 +2,7 @@
 a declarative approach to creating react components.
 
 ## Purpose
-Reuse **component behaviors** via a declarative approach.
+Reuse **component behaviors** or [cross cutting concerns](https://en.wikipedia.org/wiki/Cross-cutting_concern) via a declarative approach.
 
 ## Installation
 
