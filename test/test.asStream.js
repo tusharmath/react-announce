@@ -123,3 +123,49 @@ test('create separate lifecycle streams per instance', t => {
   ])
 })
 
+test('create separate lifecycle streams per decoration', t => {
+  const eventsFirst = []
+  const eventsSecond = []
+  const A = asStream(
+    class A {
+      constructor (instance, eventsContainer) {
+        this.instance = instance
+        this.eventsContainer = eventsContainer
+      }
+
+      getComponentStream (stateStream, dispose) {
+        dispose(stateStream.subscribe(x => {
+          this.eventsContainer.push({event: x.event, instance: this.instance})
+        }))
+      }
+    })
+  const B = asStream(
+    class B {
+      constructor (instance, eventsContainer) {
+        this.instance = instance
+        this.eventsContainer = eventsContainer
+      }
+
+      getComponentStream (stateStream, dispose) {
+        dispose(stateStream.subscribe(x => {
+          this.eventsContainer.push({event: x.event, instance: this.instance})
+        }))
+      }
+    })
+  const t1 = new A('first', eventsFirst)
+  const t2 = new B('second', eventsSecond)
+  t1.componentWillMount()
+  t2.componentWillMount()
+  t1.componentWillUnmount()
+  t2.componentWillUnmount()
+  t.same(eventsFirst, [
+    {event: 'WILL_MOUNT', instance: 'first'},
+    {event: 'WILL_UNMOUNT', instance: 'first'}
+  ])
+
+  t.same(eventsSecond, [
+    {event: 'WILL_MOUNT', instance: 'second'},
+    {event: 'WILL_UNMOUNT', instance: 'second'}
+  ])
+})
+
