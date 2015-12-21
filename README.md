@@ -16,7 +16,7 @@ npm i react-announce --save
 Exposes component [life cycle](https://facebook.github.io/react/docs/component-specs.html#lifecycle-methods) events as a stream.
 
 ```javascript
-@asStream()
+@asStream
 class MyComponent extends Component {
   getComponentStream (stream) {
     stream.subscribe(x => console.log(x)
