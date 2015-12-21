@@ -4,22 +4,29 @@
 
 'use strict'
 
-import {filter, partial, each, isFunction, get} from 'lodash'
+import {filter, partial, each, isFunction, get, noop, defaults} from 'lodash'
 import {BehaviorSubject} from 'rx'
 
 const isDisposable = i => isFunction(get(i, 'dispose'))
+const STREAM_SYMBOL = Symbol()
 export const addEventListener = (component, event, listener) => {
   const defaultListener = component.prototype[event]
   component.prototype[event] = function (...args) {
-    listener.apply(this, args)
     defaultListener.apply(this, args)
+    listener.apply(this, args)
   }
   return component
 }
 export const asStream = (component) => {
-  const prototype = component.prototype
+  /**
+   * Do not apply the asStream decorator if applied already
+   */
+  if (component[STREAM_SYMBOL]) {
+    return component
+  }
+  defaults(component.prototype, {getComponentStream: noop})
   const listen = partial(addEventListener, component)
-  const stream = new BehaviorSubject({component: null, event: null, args: null})
+  const stream = component[STREAM_SYMBOL] = new BehaviorSubject({component: null, event: null, args: null})
   const disposables = new WeakMap()
   const addDisposable = function (...args) {
     filter(args, isDisposable).forEach(x => disposables.get(this).push(x))

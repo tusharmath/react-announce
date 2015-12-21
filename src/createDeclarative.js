@@ -5,7 +5,7 @@
 'use strict'
 
 import {filter, isFunction, initial, flow, curry, last} from 'lodash'
-import {asStream} from './asStream'
+import {asStream, addEventListener} from './asStream'
 
 export const createDeclarative = (func, ...declaratives) => {
   declaratives = filter(declaratives, isFunction)
@@ -13,9 +13,9 @@ export const createDeclarative = (func, ...declaratives) => {
   return curry((...args) => {
     const params = initial(args)
     const component = flow(...declaratives)(last(args))
-    component.prototype.getComponentStream = function (stream, dispose) {
+    addEventListener(component, 'getComponentStream', function (stream, dispose) {
       func.call(this, stream, dispose, ...params)
-    }
+    })
     return component
   }, func.length - 1)
 }

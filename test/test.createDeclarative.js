@@ -53,3 +53,28 @@ test('multiple decoration', t => {
     {event: 'DID_MOUNT', param1: 'A2', param2: 'B2'}
   ])
 })
+
+test('multiple decoration per class', t => {
+  const out = []
+  var func = function (stream, dispose, param1, param2) {
+    dispose(stream.subscribe(x => out.push({
+      event: x.event,
+      param1, param2
+    })))
+  }
+  const declaration1 = createDeclarative(func)
+  const declaration2 = createDeclarative(func)
+
+  const Mock = declaration2('A2', 'B2')(declaration1('A1', 'B1')(createMockComponent(function Mock () {
+  })))
+  const i = new Mock()
+  i.componentWillMount()
+  i.componentDidMount()
+  //console.log(out)
+  t.same(out, [
+    {event: 'WILL_MOUNT', param1: 'A1', param2: 'B1'},
+    {event: 'WILL_MOUNT', param1: 'A2', param2: 'B2'},
+    {event: 'DID_MOUNT', param1: 'A1', param2: 'B1'},
+    {event: 'DID_MOUNT', param1: 'A2', param2: 'B2'}
+  ])
+})
