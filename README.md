@@ -71,6 +71,10 @@ class MyComponent extends Component {
 ```
 In this example, we wouldn't want the `time` stream to be updating the state of the component once the component has been unmounted, so we use `dispose` function which can take in multiple params of stream type and dispose them one by one once the component is unmounted.
 
+## Extensions
+
+You can create multiple extensions which are based on this module using the `createDeclaration` method. The method essentially helps you define a custom `getComponentStream` method without the verbosity.
+
 ### createDeclaration
 This is a special utility method provided to write custom declaratives on top of react-announce. For instance if I want to create a timer declarative, that sets the time elapsed since component was mounted to the state of that particular component, then I can use it as follows —
 
