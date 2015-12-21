@@ -6,16 +6,16 @@
 
 import test from 'ava'
 import 'babel-core/register'
-import {asStream} from '../src/index'
+import {asStream, createMockComponent} from '../src/index'
 
 test('disposes via addDisposable()', t => {
   const events = []
   const Temp = asStream(
-    class Temp {
+    createMockComponent(class Temp {
       getComponentStream (stateStream, dispose) {
         dispose(stateStream.subscribe(x => events.push(x.event)))
       }
-    })
+    }))
   const tmp = new Temp()
   tmp.componentWillMount()
   tmp.componentWillReceiveProps()
@@ -36,7 +36,7 @@ test('disposes via addDisposable()', t => {
 test('addDisposable must support multiple args', t => {
   const events = []
   const Temp = asStream(
-    class Temp {
+    createMockComponent(class Temp {
       getComponentStream (stateStream, dispose) {
         dispose(
           stateStream.subscribe(x => events.push(x.event)),
@@ -44,7 +44,7 @@ test('addDisposable must support multiple args', t => {
           stateStream.subscribe(x => events.push(x.event + '-THIRD'))
         )
       }
-    })
+    }))
   const tmp = new Temp()
   tmp.componentWillMount()
   tmp.componentWillReceiveProps()
@@ -75,11 +75,11 @@ test('disposes only once', t => {
   const events = []
   var i = 0
   const Temp = asStream(
-    class Temp {
+    createMockComponent(class Temp {
       getComponentStream (stateStream, dispose) {
         dispose({dispose: () => events.push(i++)})
       }
-    })
+    }))
   const t1 = new Temp()
   const t2 = new Temp()
   t1.componentWillMount()
@@ -94,7 +94,7 @@ test('create separate lifecycle streams per instance', t => {
   const eventsFirst = []
   const eventsSecond = []
   const Temp = asStream(
-    class Temp {
+    createMockComponent(class Temp {
       constructor (instance, eventsContainer) {
         this.instance = instance
         this.eventsContainer = eventsContainer
@@ -105,7 +105,7 @@ test('create separate lifecycle streams per instance', t => {
           this.eventsContainer.push({event: x.event, instance: this.instance})
         }))
       }
-    })
+    }))
   const t1 = new Temp('first', eventsFirst)
   const t2 = new Temp('second', eventsSecond)
   t1.componentWillMount()
@@ -127,7 +127,7 @@ test('create separate lifecycle streams per decoration', t => {
   const eventsFirst = []
   const eventsSecond = []
   const A = asStream(
-    class A {
+    createMockComponent(class A {
       constructor (instance, eventsContainer) {
         this.instance = instance
         this.eventsContainer = eventsContainer
@@ -138,9 +138,9 @@ test('create separate lifecycle streams per decoration', t => {
           this.eventsContainer.push({event: x.event, instance: this.instance})
         }))
       }
-    })
+    }))
   const B = asStream(
-    class B {
+    createMockComponent(class B {
       constructor (instance, eventsContainer) {
         this.instance = instance
         this.eventsContainer = eventsContainer
@@ -151,7 +151,7 @@ test('create separate lifecycle streams per decoration', t => {
           this.eventsContainer.push({event: x.event, instance: this.instance})
         }))
       }
-    })
+    }))
   const t1 = new A('first', eventsFirst)
   const t2 = new B('second', eventsSecond)
   t1.componentWillMount()

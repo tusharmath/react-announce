@@ -6,7 +6,7 @@
 
 import test from 'ava'
 import 'babel-core/register'
-import {createDeclarative} from '../src/index'
+import {createDeclarative, createMockComponent} from '../src/index'
 
 test(t => {
   const out = []
@@ -16,7 +16,7 @@ test(t => {
       param1, param2
     })))
   })
-  const Mock = declaration('A', 'B', () => null)
+  const Mock = declaration('A', 'B', createMockComponent(() => null))
   const c = new Mock()
   c.componentWillMount()
   c.componentDidMount()
@@ -35,10 +35,10 @@ test('multiple decoration', t => {
     })))
   })
 
-  const Mock1 = declaration('A1', 'B1')(function Mock1 () {
-  })
-  const Mock2 = declaration('A2', 'B2', function Mock2 () {
-  })
+  const Mock1 = declaration('A1', 'B1')(createMockComponent(function Mock1 () {
+  }))
+  const Mock2 = declaration('A2', 'B2', createMockComponent(function Mock2 () {
+  }))
 
   const c1 = new Mock1()
   const c2 = new Mock2()
