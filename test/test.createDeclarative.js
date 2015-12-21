@@ -70,7 +70,6 @@ test('multiple decoration per class', t => {
   const i = new Mock()
   i.componentWillMount()
   i.componentDidMount()
-  //console.log(out)
   t.same(out, [
     {event: 'WILL_MOUNT', param1: 'A1', param2: 'B1'},
     {event: 'WILL_MOUNT', param1: 'A2', param2: 'B2'},
