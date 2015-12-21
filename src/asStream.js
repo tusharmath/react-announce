@@ -14,6 +14,9 @@ export const addEventListener = (component, event, listener) => {
   component.prototype[event] = function (...args) {
     defaultListener.apply(this, args)
     listener.apply(this, args)
+    if (defaultListener) {
+      defaultListener.apply(this, args)
+    }
   }
   return component
 }
