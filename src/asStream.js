@@ -13,7 +13,6 @@ export const addEventListener = (component, event, listener) => {
   const defaultListener = component.prototype[event]
   component.prototype[event] = function (...args) {
     defaultListener.apply(this, args)
-    listener.apply(this, args)
     if (defaultListener) {
       defaultListener.apply(this, args)
     }
