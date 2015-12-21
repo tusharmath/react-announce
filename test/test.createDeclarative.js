@@ -65,8 +65,8 @@ test('multiple decoration per class', t => {
   const declaration1 = createDeclarative(func)
   const declaration2 = createDeclarative(func)
 
-  const Mock = declaration2('A2', 'B2')(declaration1('A1', 'B1')(createMockComponent(function Mock () {
-  })))
+  const Mock = declaration2('A2', 'B2')(declaration1('A1', 'B1')(function Mock () {
+  }))
   const i = new Mock()
   i.componentWillMount()
   i.componentDidMount()
