@@ -6,19 +6,11 @@
 
 import {filter, partial, each, isFunction, get, noop, defaults} from 'lodash'
 import {BehaviorSubject} from 'rx'
+import {addEventListener} from './addEventListener'
 
 const isDisposable = i => isFunction(get(i, 'dispose'))
 const STREAM_SYMBOL = Symbol()
-export const addEventListener = (component, event, listener) => {
-  const defaultListener = component.prototype[event]
-  component.prototype[event] = function (...args) {
-    if (defaultListener) {
-      defaultListener.apply(this, args)
-    }
-    listener.apply(this, args)
-  }
-  return component
-}
+
 export const asStream = (component) => {
   /**
    * Do not apply the asStream decorator if applied already

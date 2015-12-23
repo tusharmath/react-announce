@@ -5,7 +5,8 @@
 'use strict'
 
 import {filter, isFunction, initial, flow, curry, last} from 'lodash'
-import {asStream, addEventListener} from './asStream'
+import {asStream} from './asStream'
+import {addEventListener} from './addEventListener'
 
 export const createDeclarative = (func, ...declaratives) => {
   declaratives = filter(declaratives, isFunction)
