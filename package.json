@@ -15,7 +15,8 @@
   },
   "devDependencies": {
     "ava": "^0.8.0",
-    "babel": "^5.8.34"
+    "babel": "^5.8.34",
+    "babel-core": "^5.8.34"
   },
   "repository": "https://github.com/tusharmath/react-announce"
 }
