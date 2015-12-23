@@ -4,8 +4,7 @@
   "description": "a declarative approach to writing react components",
   "main": ".dist/index.js",
   "scripts": {
-    "test": "ava",
-    "prepublish": "node ./node_modules/babel/bin/babel.js src --out-dir .dist"
+    "test": "ava"
   },
   "author": "tusharmath@gmail.com",
   "license": "ISC",
@@ -14,9 +13,7 @@
     "rx": "^4.0.7"
   },
   "devDependencies": {
-    "ava": "^0.8.0",
-    "babel": "^5.8.34",
-    "babel-core": "^5.8.34"
+    "ava": "^0.8.0"
   },
   "repository": "https://github.com/tusharmath/react-announce"
 }

@@ -5,7 +5,6 @@
 'use strict'
 
 import test from 'ava'
-import 'babel-core/register'
 import {createDeclarative} from '../src/index'
 
 test(t => {
