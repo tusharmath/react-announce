@@ -2,7 +2,7 @@
   "name": "react-announce",
   "version": "0.0.9",
   "description": "a declarative approach to writing react components",
-  "main": ".dist/index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "ava"
   },
