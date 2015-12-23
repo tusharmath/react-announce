@@ -8,16 +8,18 @@ const _ = require('lodash')
 const asStream = require('./asStream')
 const addEventListener = require('./addEventListener')
 
-module.exports = (func, ...declaratives) => {
-  declaratives = _.filter(declaratives, _.isFunction)
+module.exports = function (func) {
+  const declaratives = _.filter(_.toArray(arguments).slice(1), _.isFunction)
   declaratives.push(asStream)
-  return _.curry((...args) => {
+  var f = function () {
+    const args = _.toArray(arguments)
     const params = _.initial(args)
-    const component = _.flow(...declaratives)(_.last(args))
+    const component = _.spread(_.flow)(declaratives)(_.last(args))
     addEventListener(component, 'getComponentStream', function (stream, dispose) {
-      func.call(this, stream, dispose, ...params)
+      func.apply(this, [stream, dispose].concat(params))
     })
     return component
-  }, func.length - 1)
+  }
+  return _.curry(f, func.length - 1)
 }
 
