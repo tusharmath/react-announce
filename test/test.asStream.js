@@ -5,7 +5,6 @@
 'use strict'
 
 import test from 'ava'
-import 'babel-core/register'
 import {asStream} from '../src/index'
 
 test('disposes via addDisposable()', t => {
