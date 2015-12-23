@@ -3,27 +3,26 @@
  */
 
 'use strict'
+const _ = require('lodash')
+const BehaviorSubject = require ('rx').BehaviorSubject
+const addEventListener = require('./addEventListener')
 
-import {filter, partial, each, isFunction, get, noop, defaults} from 'lodash'
-import {BehaviorSubject} from 'rx'
-import {addEventListener} from './addEventListener'
-
-const isDisposable = i => isFunction(get(i, 'dispose'))
+const isDisposable = i => _.isFunction(_.get(i, 'dispose'))
 const STREAM_SYMBOL = Symbol()
 
-export const asStream = (component) => {
+module.exports = component => {
   /**
    * Do not apply the asStream decorator if applied already
    */
   if (component[STREAM_SYMBOL]) {
     return component
   }
-  defaults(component.prototype, {getComponentStream: noop})
-  const listen = partial(addEventListener, component)
+  _.defaults(component.prototype, {getComponentStream: _.noop})
+  const listen = _.partial(addEventListener, component)
   const stream = component[STREAM_SYMBOL] = new BehaviorSubject({component: null, event: null, args: null})
   const disposables = new WeakMap()
   const addDisposable = function (...args) {
-    filter(args, isDisposable).forEach(x => disposables.get(this).push(x))
+    _.filter(args, isDisposable).forEach(x => disposables.get(this).push(x))
   }
   listen('componentWillMount', function (...args) {
     disposables.set(this, [])
@@ -44,7 +43,7 @@ export const asStream = (component) => {
   })
   listen('componentWillUnmount', function (...args) {
     stream.onNext({component: this, event: 'WILL_UNMOUNT', args})
-    each(disposables.get(this), x => x.dispose())
+    _.each(disposables.get(this), x => x.dispose())
     disposables.delete(this)
   })
 

@@ -4,7 +4,7 @@
 
 'use strict'
 
-export const addEventListener = (component, event, listener) => {
+module.exports = (component, event, listener) => {
   const defaultListener = component.prototype[event]
   component.prototype[event] = function (...args) {
     if (defaultListener) {
