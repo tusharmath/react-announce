@@ -15,5 +15,15 @@
   "devDependencies": {
     "ava": "^0.8.0"
   },
-  "repository": "https://github.com/tusharmath/react-announce"
+  "repository": "https://github.com/tusharmath/react-announce",
+  "keywords": [
+    "decorators",
+    "declarative",
+    "react",
+    "rx",
+    "observable",
+    "stream",
+    "framework",
+    "announce"
+  ]
 }
