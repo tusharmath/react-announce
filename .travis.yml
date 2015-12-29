@@ -3,11 +3,15 @@ node_js:
 - '5.2'
 cache:
   directories:
-    - node_modules
+  - node_modules
 before_script:
 - npm install -g ava
 - npm install -g mversion
+- git config --global user.email "tusharmath@gmail.com"
+- git config --global user.name "Travis-CI"
 before_deploy:
+- git config credential.helper "store --file=.git/credentials"
+- echo "https://${GH_TOKEN}:@github.com" > .git/credentials
 - mversion prerelease -m
 deploy:
   provider: npm
@@ -16,3 +20,6 @@ deploy:
     branch: master
   api_key:
     secure: RuqMjA5/lwgbEQnyjl5sZPkwCGrDu7Z14gITyAcQbKXiZK70kU2gZoZ70y11hy7dE3Xe1BX8v+fFicQNafp1VjskA/g2VAprXp20E0ka4SArFufJC21IRR4yUzZ3X+piocWHSqJ7D8GCkEi7wpyzLSVIG3fu4UtY5O9UWPuhGLWR1svXVF56LYVMBlTdz63Ab2eX6VI+h/JE8V1SkkKoTew0F69mOwHNLBpFAUgQKPEm/iJiE/DDw33NGSxw5/gnewOhrl2s7ObSNIqViSPoC7g8qpGy4YUWWz7fu9Ee+oFejR+9Y8GJG/Gy759JQLRT4TmI6zFxgWlupPJFKtxwnYhNyD4HoJXl4d0lx1Rx/6uIqaImsoOGkFr6x7BKBOBHHu9ECMiw2NljhBGYEpJM23A9QtVZSeM8yMgpulQnYPPvn1Haju5yUQybu7Bo3XkRHCLtQmskQimeIw4bDeozhoPDRNPhqsjBkT9KY9tyjFWCE9/TmE9KriOrVBzSPmcs4jZfxbXUWlfmoBU3+VWBwnl0PAd8rtyccPeW7MT9J2PmyyRuUuGuepOVYEHd8BqgCKijTco3RkDI8sE+XVxlwUfUwdeLA9WKh3QrCMqbWWarCmpv1sKRfe9kQMn2ORWPJIO6D5i7Oqg0OF4eloOG6rbBgOuxXC/qLaJKKi2rZCE=
+env:
+  global:
+    secure: HXUgpy8JalhYxkiC4fg7aA7z2zklWFs+fTK/B8+x4uQ8Jp+Tu0xSYkWLOpEgN3lwJiAuX9pLoIEKR1TPkyZNF4hkSXsqxse/JA8BUwC/+PfCSUWPEBGDNrHSSf1fgQAb+h10NKQYjRExJX3ZdMr5/aAtCWmXrrgolrOPUZtZgXVK6dHt1nWhQjOePbcfH6auYGbTZD7Bdjma9XVXO+1j+sYfvg+dWBhIY4KmYdpZsrcYwB6BCAKLXm1Kf9FXdUrbkGgwx5PyFctXDZvJyUW8GiO5d8hpEGUNvfjbcVePlYE0VY3ZBo7biIQubN/xFLIonzpQOV3TY8Db+4vbb4v5vQvYYrBLTMgiHW4zDA92HjbMK+NgMrvGw0R73yC2lmZ8ly5fAdEPIimhu++xvw3yPqfIfrFGdYlyi5tNhXfGmYyUsS8umFvyiHUxUSEq5WzZvGeYyWnc9TJ9PD8wly1vGn5M4T4s6LYg51gSBVqJx50lmuEke+o9+BPbckjmsQq6D3lDP7mKLIkTAhFdGWF6o7XhcZ/eT3N+natsdCYTYckqWMzomimwgMCGVvW1i9aGHLDrpw29URTAdeV7kTveTvw5L+tUQ7ZroqJirAxBq0t/xC82V+BoN5yBlXABjn6/2GxBadoG25Zx1GudmacyVjEn8ls38Fi95DTcRX1mQdo=
