@@ -106,9 +106,10 @@ class MyComponent extends Component {
 
 `createDeclarative` uses `@asStream` declarative and sets its `getComponentStream` method to your custom method.
 
-## Available Declaratives
+## Available Declaratives [npm](https://www.npmjs.com/search?q=react-announce)
 
 * [react-announce-connect](https://github.com/tusharmath/react-announce-connect): Attaches multiple source observables and applies the changes to a component's state.
 * [react-announce-size](https://github.com/tusharmath/react-announce-size): Exposes a component's size as a stream.
 * [react-announce-fetch](https://github.com/tusharmath/react-announce-fetch): Sync data store across multiple components over REST.
+* * [react-announce-hydrate](https://github.com/tusharmath/react-announce-hydrate): Applies component life cycle events to an observer.
 * [Need more?](https://github.com/tusharmath/react-announce/issues/new)
