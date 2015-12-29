@@ -1,6 +1,6 @@
 {
   "name": "react-announce",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "description": "a declarative approach to writing react components",
   "main": "src/index.js",
   "scripts": {
