@@ -3,6 +3,9 @@ node_js:
 - '5.2'
 before_script:
 - npm install -g ava
+- npm install -g mversion
+before_deploy:
+- mversion prerelease -m
 deploy:
   provider: npm
   email: tusharmath@gmail.com
