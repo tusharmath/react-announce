@@ -111,5 +111,5 @@ class MyComponent extends Component {
 * [react-announce-connect](https://github.com/tusharmath/react-announce-connect): Attaches multiple source observables and applies the changes to a component's state.
 * [react-announce-size](https://github.com/tusharmath/react-announce-size): Exposes a component's size as a stream.
 * [react-announce-fetch](https://github.com/tusharmath/react-announce-fetch): Sync data store across multiple components over REST.
-* * [react-announce-hydrate](https://github.com/tusharmath/react-announce-hydrate): Applies component life cycle events to an observer.
+* [react-announce-hydrate](https://github.com/tusharmath/react-announce-hydrate): Applies component life cycle events to an observer.
 * [Need more?](https://github.com/tusharmath/react-announce/issues/new)
