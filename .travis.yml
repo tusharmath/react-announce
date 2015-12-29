@@ -4,6 +4,8 @@ node_js:
 before_script:
 - npm install -g ava
 deploy:
+  provider: npm
+  email: tusharmath@gmail.com
   on:
     branch: master
   api_key:
