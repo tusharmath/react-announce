@@ -167,4 +167,3 @@ test('create separate lifecycle streams per decoration', t => {
     {event: 'WILL_UNMOUNT', instance: 'second'}
   ])
 })
-

@@ -8,18 +8,18 @@ const BehaviorSubject = require('rx').BehaviorSubject
 const addEventListener = require('./addEventListener')
 
 const isDisposable = i => _.isFunction(_.get(i, 'dispose'))
-const STREAM_SYMBOL = Symbol()
+const STREAM_KEY = '__componentStream__'
 
 module.exports = component => {
   /**
    * Do not apply the asStream decorator if applied already
    */
-  if (component[STREAM_SYMBOL]) {
+  if (component[STREAM_KEY]) {
     return component
   }
   _.defaults(component.prototype, {getComponentStream: _.noop})
   const listen = _.partial(addEventListener, component)
-  const stream = component[STREAM_SYMBOL] = new BehaviorSubject({component: null, event: null, args: null})
+  const stream = component[STREAM_KEY] = new BehaviorSubject({component: null, event: null, args: null})
   const disposables = new WeakMap()
   const addDisposable = function () {
     const args = _.toArray(arguments)
