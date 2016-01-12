@@ -40,7 +40,15 @@ OUTPUT: With each event three params are being sent —
 ```
 
 ### getComponentStream(stream: Observable, dispose: function)
-Exposes the component's lifecycle events as a stream. Events are available in the `event` property of the stream observable. Events include — `WILL_MOUNT`, `DID_MOUNT`, `WILL_RECEIVE_PROPS`, `WILL_UPDATE`, `DID_UPDATE`, `WILL_UNMOUNT`. This method is always called with context to the current instance of the component.
+Exposes the component's lifecycle events as a stream and is always called with context of the current instance of the component. Events are available in the `event` property of the stream observable. Events include — 
+- `WILL_MOUNT`
+- `DID_MOUNT`
+- `WILL_RECEIVE_PROPS`
+- `WILL_UPDATE`
+- `DID_UPDATE`
+- `WILL_UNMOUNT`
+
+
 
 One can attach any custom logic by filtering on any of the events such as —
 
