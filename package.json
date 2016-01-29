@@ -1,10 +1,10 @@
 {
   "name": "react-announce",
-  "version": "0.1.2",
   "description": "a declarative approach to writing react components",
   "main": "src/index.js",
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "tusharmath@gmail.com",
   "license": "ISC",
@@ -13,9 +13,14 @@
     "rx": "^4.0.7"
   },
   "devDependencies": {
-    "ava": "^0.8.0"
+    "ava": "^0.8.0",
+    "cz-conventional-changelog": "^1.1.5",
+    "semantic-release": "^4.3.5"
   },
-  "repository": "https://github.com/tusharmath/react-announce",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tusharmath/react-announce.git"
+  },
   "keywords": [
     "decorators",
     "declarative",
@@ -25,5 +30,10 @@
     "stream",
     "framework",
     "announce"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
