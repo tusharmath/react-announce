@@ -18,7 +18,12 @@ module.exports = component => {
   if (component[STREAM_KEY]) {
     return component
   }
-  _.defaults(component.prototype, {getComponentStream: _.noop})
+  const dispatch = function () {
+    const args = _.toArray(arguments)
+    stream.onNext({component: this, event: 'DISPATCH', args})
+  }
+
+  _.defaults(component.prototype, {getComponentStream: _.noop, dispatch})
   const listen = _.partial(addEventListener, component)
   const stream = component[STREAM_KEY] = new BehaviorSubject({component: null, event: null, args: null})
 
@@ -29,7 +34,6 @@ module.exports = component => {
   listen('componentWillMount', function () {
     const args = _.toArray(arguments)
     this[DISPOSABLE_KEY] = []
-
     stream.onNext({component: this, event: 'WILL_MOUNT', args})
     this.getComponentStream(stream.filter(x => x.component === this), addDisposable.bind(this))
   })
