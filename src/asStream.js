@@ -10,6 +10,15 @@ const addEventListener = require('./addEventListener')
 const isDisposable = i => _.isFunction(_.get(i, 'dispose'))
 const STREAM_KEY = '__componentStream__'
 const DISPOSABLE_KEY = '__disposables__'
+const LIFECYCLE_EVENTS = [
+  'componentWillMount',
+  'componentDidMount',
+  'componentWillReceiveProps',
+  'componentWillUpdate',
+  'componentDidUpdate',
+  'componentWillUnmount'
+]
+const getEventName = x => _.chain(x.replace('component', '')).snakeCase().toUpper().value()
 
 module.exports = component => {
   /**
@@ -30,31 +39,20 @@ module.exports = component => {
     const args = _.toArray(arguments)
     _.filter(args, isDisposable).forEach(x => this[DISPOSABLE_KEY].push(x))
   }
+
+  _.each(LIFECYCLE_EVENTS, x => {
+    var event = getEventName(x)
+    listen(x, function () {
+      const args = _.toArray(arguments)
+      stream.onNext({component: this, event, args})
+    })
+  })
+
   listen('componentWillMount', function () {
-    const args = _.toArray(arguments)
     this[DISPOSABLE_KEY] = []
-    stream.onNext({component: this, event: 'WILL_MOUNT', args})
     this.getComponentStream(stream.filter(x => x.component === this), addDisposable.bind(this))
   })
-  listen('componentDidMount', function () {
-    const args = _.toArray(arguments)
-    stream.onNext({component: this, event: 'DID_MOUNT', args})
-  })
-  listen('componentWillReceiveProps', function () {
-    const args = _.toArray(arguments)
-    stream.onNext({component: this, event: 'WILL_RECEIVE_PROPS', args})
-  })
-  listen('componentWillUpdate', function () {
-    const args = _.toArray(arguments)
-    stream.onNext({component: this, event: 'WILL_UPDATE', args})
-  })
-  listen('componentDidUpdate', function () {
-    const args = _.toArray(arguments)
-    stream.onNext({component: this, event: 'DID_UPDATE', args})
-  })
   listen('componentWillUnmount', function () {
-    const args = _.toArray(arguments)
-    stream.onNext({component: this, event: 'WILL_UNMOUNT', args})
     _.each(this[DISPOSABLE_KEY], x => x.dispose())
   })
 
