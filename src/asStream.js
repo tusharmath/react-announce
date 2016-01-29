@@ -9,6 +9,7 @@ const addEventListener = require('./addEventListener')
 
 const isDisposable = i => _.isFunction(_.get(i, 'dispose'))
 const STREAM_KEY = '__componentStream__'
+const DISPOSABLE_KEY = '__disposables__'
 
 module.exports = component => {
   /**
@@ -20,14 +21,15 @@ module.exports = component => {
   _.defaults(component.prototype, {getComponentStream: _.noop})
   const listen = _.partial(addEventListener, component)
   const stream = component[STREAM_KEY] = new BehaviorSubject({component: null, event: null, args: null})
-  const disposables = new WeakMap()
+
   const addDisposable = function () {
     const args = _.toArray(arguments)
-    _.filter(args, isDisposable).forEach(x => disposables.get(this).push(x))
+    _.filter(args, isDisposable).forEach(x => this[DISPOSABLE_KEY].push(x))
   }
   listen('componentWillMount', function () {
     const args = _.toArray(arguments)
-    disposables.set(this, [])
+    this[DISPOSABLE_KEY] = []
+
     stream.onNext({component: this, event: 'WILL_MOUNT', args})
     this.getComponentStream(stream.filter(x => x.component === this), addDisposable.bind(this))
   })
@@ -50,8 +52,7 @@ module.exports = component => {
   listen('componentWillUnmount', function () {
     const args = _.toArray(arguments)
     stream.onNext({component: this, event: 'WILL_UNMOUNT', args})
-    _.each(disposables.get(this), x => x.dispose())
-    disposables.delete(this)
+    _.each(this[DISPOSABLE_KEY], x => x.dispose())
   })
 
   return component
