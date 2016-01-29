@@ -81,7 +81,7 @@ In this example, we wouldn't want the `time` stream to be updating the state of 
 
 ## Extensions
 
-You can create multiple extensions which are based on this module using the `createDeclaration` method. The method essentially helps you define a custom `getComponentStream` method without the verbosity.
+You can create multiple extensions which are based on this module using the `createDeclarative` method. The method essentially helps you define a custom `getComponentStream` method without the verbosity.
 
 ### createDeclarative
 This is a special utility method provided to write custom declaratives on top of react-announce. For instance if I want to create a timer declarative, that sets the time elapsed since component was mounted to the state of that particular component, then I can use it as follows —
