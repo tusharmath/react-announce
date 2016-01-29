@@ -18,10 +18,9 @@ module.exports = component => {
   if (component[STREAM_KEY]) {
     return component
   }
-  const dispatch = function () {
-    const args = _.toArray(arguments)
-    stream.onNext({component: this, event: 'DISPATCH', args})
-  }
+  const dispatch = _.rest(function (event, args) {
+    stream.onNext({component: this, event, args})
+  })
 
   _.defaults(component.prototype, {getComponentStream: _.noop, dispatch})
   const listen = _.partial(addEventListener, component)

@@ -177,16 +177,16 @@ test('dispatch custom events', t => {
       }
     })
   const tmp = new Temp()
-  tmp.dispatch('0', '0', '0')
+  tmp.dispatch('ALPHA', '0', '0', '0')
   tmp.componentWillMount()
-  tmp.dispatch('1', '1', '1')
-  tmp.dispatch('2', '2')
+  tmp.dispatch('BRAVO', '1', '1', '1')
+  tmp.dispatch('CHARLIE', '2', '2')
   tmp.componentWillUnmount()
-  tmp.dispatch('3')
+  tmp.dispatch('DELTA', '3')
   t.same(events, [
     {component: tmp, event: 'WILL_MOUNT', args: []},
-    {component: tmp, event: 'DISPATCH', args: ['1', '1', '1']},
-    {component: tmp, event: 'DISPATCH', args: ['2', '2']},
+    {component: tmp, event: 'BRAVO', args: ['1', '1', '1']},
+    {component: tmp, event: 'CHARLIE', args: ['2', '2']},
     {component: tmp, event: 'WILL_UNMOUNT', args: []}
   ])
 })
