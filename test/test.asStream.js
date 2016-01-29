@@ -167,3 +167,26 @@ test('create separate lifecycle streams per decoration', t => {
     {event: 'WILL_UNMOUNT', instance: 'second'}
   ])
 })
+
+test('dispatch custom events', t => {
+  const events = []
+  const Temp = asStream(
+    class Temp {
+      getComponentStream (stateStream, dispose) {
+        dispose(stateStream.subscribe(x => events.push(x)))
+      }
+    })
+  const tmp = new Temp()
+  tmp.dispatch('ALPHA', '0', '0', '0')
+  tmp.componentWillMount()
+  tmp.dispatch('BRAVO', '1', '1', '1')
+  tmp.dispatch('CHARLIE', '2', '2')
+  tmp.componentWillUnmount()
+  tmp.dispatch('DELTA', '3')
+  t.same(events, [
+    {component: tmp, event: 'WILL_MOUNT', args: []},
+    {component: tmp, event: 'BRAVO', args: ['1', '1', '1']},
+    {component: tmp, event: 'CHARLIE', args: ['2', '2']},
+    {component: tmp, event: 'WILL_UNMOUNT', args: []}
+  ])
+})

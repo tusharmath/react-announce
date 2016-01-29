@@ -1,4 +1,4 @@
-# react-announce [![Build Status](https://travis-ci.org/tusharmath/react-announce.svg)](https://travis-ci.org/tusharmath/react-announce)
+# react-announce [![Build Status](https://travis-ci.org/tusharmath/react-announce.svg)](https://travis-ci.org/tusharmath/react-announce) [![npm](https://img.shields.io/npm/v/react-announce.svg)]()
 a declarative approach to creating react components.
 
 ## Purpose
@@ -73,15 +73,42 @@ class MyComponent extends Component {
     )
   }
   render () {
-    return (<div>Hello World!</div>)
+    return (<div>Hello World! {this.state.time}</div>)
   }
 }
 ```
 In this example, we wouldn't want the `time` stream to be updating the state of the component once the component has been unmounted, so we use `dispose` function which can take in multiple params of stream type and dispose them one by one once the component is unmounted.
 
+### Dispatching custom events
+The component gets a special function named `dispatch()` which enables us to dispatch custom lifecycle events. 
+
+```javascript
+
+class MyComponent extends Component {
+  onClick () {
+    /*
+    * The first param is used as the name of the event
+    * Rest of the params are passed as the `args` property to the component stream.
+    **/
+    this.dispatch('CLICKED', this.state.count + 1)
+  }
+  getComponentStream (stream, dispose) {
+    dispose(
+      stream.filter(x => x.event === 'CLICKED')
+      .map(x => x.args[0])
+      .subscribe(count => this.setState({count}))
+    )
+  }
+  render () {
+    return (<div onClick={this.onClick.bind(this)}>Hello World! {this.state.count}</div>)
+  }
+}
+```
+
+
 ## Extensions
 
-You can create multiple extensions which are based on this module using the `createDeclaration` method. The method essentially helps you define a custom `getComponentStream` method without the verbosity.
+You can create multiple extensions which are based on this module using the `createDeclarative` method. The method essentially helps you define a custom `getComponentStream` method without the verbosity.
 
 ### createDeclarative
 This is a special utility method provided to write custom declaratives on top of react-announce. For instance if I want to create a timer declarative, that sets the time elapsed since component was mounted to the state of that particular component, then I can use it as follows —
