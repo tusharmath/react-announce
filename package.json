@@ -13,7 +13,7 @@
     "rx": "^4.0.7"
   },
   "devDependencies": {
-    "ava": "^0.8.0",
+    "ava": "^0.11.0",
     "cracks": "^3.1.2",
     "cz-conventional-changelog": "^1.1.5",
     "semantic-release": "^4.3.5"
@@ -40,7 +40,10 @@
   "release": {
     "verifyRelease": {
       "path": "cracks",
-      "paths": ["test", "package.json"],
+      "paths": [
+        "test",
+        "package.json"
+      ],
       "silent": true
     }
   }
