@@ -1,17 +1,15 @@
 # react-announce [![Build Status][2]][3] [![npm][4]]()
-a declarative approach to creating react components.
-
-## Purpose
-Reuse **component behaviors** or [cross cutting concerns][5] via a declarative approach.
+A declarative approach to writing react components. Enables reuse of **component behaviors**.
 
 ## Installation
 
 ```
 npm i react-announce --save
 ```
+## API
 
 ### @subscribe
-`@subscribe()` decorator lets any observer subscribe to the [lifecycle events][1] *(and also custom events that we will see later)* of the component.
+`@subscribe()` decorator lets any observer subscribe to the [lifecycle events][1] *(and also custom events that we will see later)* of the component. 
 
 ```javascript
 const Rx = require('rx')
@@ -36,7 +34,7 @@ B {event: 'DID_MOUNT', args: [], component: MyComponent {}}
 */
 
 ```
- Every subscriber get all the notification from all the instances of the component, of each of its lifecycle and custom events. Each notification on the stream is fired with three keys —
+ Every subscriber gets all the notification from all the instances of the component, of each of its lifecycle and custom events. Each notification on the stream is fired with three keys —
  
  ```js
 {
@@ -47,16 +45,18 @@ B {event: 'DID_MOUNT', args: [], component: MyComponent {}}
   "component": {} /*instance of the component*/
 }
  ```
+ 
+ Too improve performance, the subscriptions are only created once the component mounts and are automatically remove as soon as it unmounts.
 
 ### getComponentStream(stream: Observable, dispose: function)
-Exposes the component events of only the CURRENT instance, as a stream and is always called with context of that instance.
+Exposes the component events of only the CURRENT instance, as a stream and is always called with context of that instance. It is called as soon as the component is mounted. 
 
 ```javascript
 @subscribe()
 class MyComponent extends Component {
-  getComponentStream (stream) {
+  getComponentStream (stream, dispose) {
     //{stream} exposes events of only the current instance of the component.
-    stream.subscribe(x => console.log(x))
+    dispose(stream.subscribe(x => console.log(x)))
   }
   render () {
     return (<div>Hello World!</div>)
@@ -64,8 +64,10 @@ class MyComponent extends Component {
 }
 ```
 
-### Dispatching custom events
-The component gets a special function named `dispatch()` which enables us to dispatch custom lifecycle events.
+The second param is `dispose` which frees up the memory as soon as the component is unmounted.
+
+### dispatch(string: event, ...args)
+The component gets a special function named `dispatch()` which enables us to dispatch custom events.
 
 ```javascript
 
