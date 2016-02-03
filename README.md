@@ -34,7 +34,7 @@ B {event: 'DID_MOUNT', args: [], component: MyComponent {}}
 */
 
 ```
- Every subscriber gets all the notification from all the instances of the component, of each of its lifecycle and custom events. Each notification on the stream is fired with three keys —
+ Every subscriber gets all the notification from all the instances of the `MyComponent` class, of each of its lifecycle and custom events. Each notification on the stream is fired with three keys —
  
  ```js
 {
@@ -46,7 +46,7 @@ B {event: 'DID_MOUNT', args: [], component: MyComponent {}}
 }
  ```
  
- Too improve performance, the subscriptions are only created once the component mounts and are automatically remove as soon as it unmounts.
+ Too improve performance, the subscriptions are only created once the component mounts and are automatically removed (disposed) as soon as it unmounts.
 
 ### getComponentStream(stream: Observable, dispose: function)
 Exposes the component events of only the CURRENT instance, as a stream and is always called with context of that instance. It is called as soon as the component is mounted. 
@@ -64,7 +64,7 @@ class MyComponent extends Component {
 }
 ```
 
-The second param is `dispose` which frees up the memory as soon as the component is unmounted.
+The second param is `dispose` which disposes the subscription as soon as the component unmounts. This frees up the allocated memory and improves performance.
 
 ### dispatch(string: event, ...args)
 The component gets a special function named `dispatch()` which enables us to dispatch custom events.
