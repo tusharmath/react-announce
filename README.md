@@ -1,8 +1,8 @@
-# react-announce [![Build Status](https://travis-ci.org/tusharmath/react-announce.svg)](https://travis-ci.org/tusharmath/react-announce) [![npm](https://img.shields.io/npm/v/react-announce.svg)]()
+# react-announce [![Build Status][2]][3] [![npm][4]]()
 a declarative approach to creating react components.
 
 ## Purpose
-Reuse **component behaviors** or [cross cutting concerns](https://en.wikipedia.org/wiki/Cross-cutting_concern) via a declarative approach.
+Reuse **component behaviors** or [cross cutting concerns][5] via a declarative approach.
 
 ## Installation
 
@@ -12,78 +12,65 @@ npm i react-announce --save
 
 ## API
 
-### @asStream()
-Exposes component [life cycle](https://facebook.github.io/react/docs/component-specs.html#lifecycle-methods) events as a stream.
+### @subscribe
+`@subscribe()` decorator lets any observer subscribe to the [lifecycle events][1] *(and also custom events that we will see later)* of the component.
 
 ```javascript
-@asStream
+const Rx = require('rx')
+const observerA = Rx.Observer.create(x => console.log('A', x))
+const observerB = Rx.Observer.create(x => console.log('B', x))
+
+@subscribe(observerA, observerB)
 class MyComponent extends Component {
-  getComponentStream (stream) {
-    stream.subscribe(x => console.log(x)
-  }
   render () {
     return (<div>Hello World!</div>)
   }
 }
 
 /*
-OUTPUT: With each event three params are being sent — 
-1. event: the type of lifecyle event
-2. args: the arguments with with the event was dispatched
-3. component: access to the originial component.
+OUTPUT:
 
-{event: 'WILL_MOUNT', args: [], component: MyComponent {}}
-{event: 'DID_MOUNT', args: [], component: MyComponent {}}
+A {event: 'WILL_MOUNT', args: [], component: MyComponent {}}
+B {event: 'WILL_MOUNT', args: [], component: MyComponent {}}
+A {event: 'DID_MOUNT', args: [], component: MyComponent {}}
+B {event: 'DID_MOUNT', args: [], component: MyComponent {}}
 
 */
 
 ```
+ Every subscriber get all the notification from all the instance of all the lifecycle events. Each notification on the stream is fired with three keys —
+ ```js
+{
+  "event": "WILL_MOUNT", /*DID_MOUNT, WILL_RECEIVE_PROPS, WILL_UPDATE, DID_UPDATE, WILL_UNMOUNT*/
+
+  "args": [], /*the arguments with which the event was dispatched*/,
+
+  "component": {} /*instance of the component*/
+}
+ ```
 
 ### getComponentStream(stream: Observable, dispose: function)
-Exposes the component's lifecycle events as a stream and is always called with context of the current instance of the component. Events are available in the `event` property of the stream observable. Events include — 
-- `WILL_MOUNT`
-- `DID_MOUNT`
-- `WILL_RECEIVE_PROPS`
-- `WILL_UPDATE`
-- `DID_UPDATE`
-- `WILL_UNMOUNT`
-
-
-
-One can attach any custom logic by filtering on any of the events such as —
+Exposes the component events of only the CURRENT instance, as a stream and is always called with context of that instance.
 
 ```javascript
-getComponentStream (stream) {
-  stream.filter(x => x.event === 'WILL_MOUNT').subscribe(x => this.setState({status: 'mounted'}))
-}
-```
-
-Its often necessary to dispose of your subscriptions as soon as your component unmounts. This can be done easily by using the second param of the `getComponentStream()` — `dispose`.
-
-
-```javascript
-const time = Observable.interval(100).map(() => new Date().toString())
-
+@subscribe()
 class MyComponent extends Component {
-  getComponentStream (stream, dispose) {
-    dispose(
-      stream.filter(x => x.event === 'WILL_MOUNT')
-      .combineLatest(time, (a, b) => b)
-      .subscribe(time => this.setState({time}))
-    )
+  getComponentStream (stream) {
+    //{stream} exposes events of only the current instance of the component.
+    stream.subscribe(x => console.log(x))
   }
   render () {
-    return (<div>Hello World! {this.state.time}</div>)
+    return (<div>Hello World!</div>)
   }
 }
 ```
-In this example, we wouldn't want the `time` stream to be updating the state of the component once the component has been unmounted, so we use `dispose` function which can take in multiple params of stream type and dispose them one by one once the component is unmounted.
 
 ### Dispatching custom events
-The component gets a special function named `dispatch()` which enables us to dispatch custom lifecycle events. 
+The component gets a special function named `dispatch()` which enables us to dispatch custom lifecycle events.
 
 ```javascript
 
+@subscribe()
 class MyComponent extends Component {
   onClick () {
     /*
@@ -116,7 +103,7 @@ This is a special utility method provided to write custom declaratives on top of
 ```javascript
 
 const timer = createDeclarative(function (stream, dispose, interval, stateProperty) {
-  
+
   const time = Observable.interval(interval).map(Date.now)
   dispose(
     stream.filter(x => x.event === 'WILL_MOUNT')
@@ -141,6 +128,17 @@ class MyComponent extends Component {
 
 `createDeclarative` uses `@asStream` declarative and sets its `getComponentStream` method to your custom method.
 
+## Lifecycle Events
+
+- `WILL_MOUNT`
+- `DID_MOUNT`
+- `WILL_RECEIVE_PROPS`
+- `WILL_UPDATE`
+- `DID_UPDATE`
+- `WILL_UNMOUNT`
+
+
+
 ## Available Declaratives [npm](https://www.npmjs.com/search?q=react-announce)
 
 * [react-announce-connect](https://github.com/tusharmath/react-announce-connect): Attaches multiple source observables and applies the changes to a component's state.
@@ -149,3 +147,10 @@ class MyComponent extends Component {
 * [react-announce-hydrate](https://github.com/tusharmath/react-announce-hydrate): Applies component life cycle events to an observer.
 * [react-announce-draggable](https://github.com/tusharmath/react-announce-draggable): Exposes component's drag and drop events as a stream.
 * [Need more?](https://github.com/tusharmath/react-announce/issues/new)
+
+
+[1]: https://facebook.github.io/react/docs/component-specs.html#lifecycle-methods
+[2]: https://travis-ci.org/tusharmath/react-announce.svg
+[3]: https://travis-ci.org/tusharmath/react-announce
+[4]: https://img.shields.io/npm/v/react-announce.svg
+[5]: https://en.wikipedia.org/wiki/Cross-cutting_concern
