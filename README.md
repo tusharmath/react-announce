@@ -147,4 +147,5 @@ class MyComponent extends Component {
 * [react-announce-size](https://github.com/tusharmath/react-announce-size): Exposes a component's size as a stream.
 * [react-announce-fetch](https://github.com/tusharmath/react-announce-fetch): Sync data store across multiple components over REST.
 * [react-announce-hydrate](https://github.com/tusharmath/react-announce-hydrate): Applies component life cycle events to an observer.
+* [react-announce-draggable](https://github.com/tusharmath/react-announce-draggable): Exposes component's drag and drop events as a stream.
 * [Need more?](https://github.com/tusharmath/react-announce/issues/new)
