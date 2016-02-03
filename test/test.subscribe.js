@@ -59,3 +59,27 @@ test('multiple', t => {
   t.same(out1, ['WILL_MOUNT', 'WILL_UNMOUNT'])
 })
 
+test('multi-instance', t => {
+  const out = []
+  class Mock {
+    constructor (i) {
+      this.instance = i
+    }
+  }
+  const fakeStore = new Subject()
+  const MockH = subscribe(fakeStore)(Mock)
+  const m0 = new MockH(0)
+  const m1 = new MockH(1)
+  fakeStore.subscribe(x => out.push({i: x.component.instance, e: x.event}))
+  m0.componentWillMount()
+  m1.componentWillMount()
+  m0.componentWillUnmount()
+  m1.componentWillUnmount()
+
+  t.same(out, [
+    {i: 0, e: 'WILL_MOUNT'},
+    {i: 1, e: 'WILL_MOUNT'},
+    {i: 0, e: 'WILL_UNMOUNT'},
+    {i: 1, e: 'WILL_UNMOUNT'}
+  ])
+})
