@@ -83,3 +83,22 @@ test('multi-instance', t => {
     {i: 1, e: 'WILL_UNMOUNT'}
   ])
 })
+
+test('empty', t => {
+  const out = []
+  class Mock {
+    getComponentStream (stream, dispose) {
+      stream.subscribe(x => out.push(x.event))
+    }
+  }
+  const MockH = subscribe()(Mock)
+  const m0 = new MockH()
+
+  m0.componentWillMount()
+  m0.componentWillUnmount()
+  t.same(out, [
+    'WILL_MOUNT',
+    'WILL_UNMOUNT'
+  ])
+})
+
