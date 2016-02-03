@@ -10,8 +10,6 @@ Reuse **component behaviors** or [cross cutting concerns][5] via a declarative a
 npm i react-announce --save
 ```
 
-## API
-
 ### @subscribe
 `@subscribe()` decorator lets any observer subscribe to the [lifecycle events][1] *(and also custom events that we will see later)* of the component.
 
@@ -38,7 +36,8 @@ B {event: 'DID_MOUNT', args: [], component: MyComponent {}}
 */
 
 ```
- Every subscriber get all the notification from all the instance of all the lifecycle events. Each notification on the stream is fired with three keys —
+ Every subscriber get all the notification from all the instances of the component, of each of its lifecycle and custom events. Each notification on the stream is fired with three keys —
+ 
  ```js
 {
   "event": "WILL_MOUNT", /*DID_MOUNT, WILL_RECEIVE_PROPS, WILL_UPDATE, DID_UPDATE, WILL_UNMOUNT*/
@@ -97,13 +96,10 @@ class MyComponent extends Component {
 
 You can create multiple extensions which are based on this module using the `createDeclarative` method. The method essentially helps you define a custom `getComponentStream` method without the verbosity.
 
-### createDeclarative
-This is a special utility method provided to write custom declaratives on top of react-announce. For instance if I want to create a timer declarative, that sets the time elapsed since component was mounted to the state of that particular component, then I can use it as follows —
+For instance if I want to create a timer declarative, that sets the time elapsed since component was mounted to the state of that particular component, then I do as follows —
 
 ```javascript
-
 const timer = createDeclarative(function (stream, dispose, interval, stateProperty) {
-
   const time = Observable.interval(interval).map(Date.now)
   dispose(
     stream.filter(x => x.event === 'WILL_MOUNT')
@@ -126,7 +122,7 @@ class MyComponent extends Component {
 // Keeps printing the elapsed time which gets updated ever 100ms
 ```
 
-`createDeclarative` uses `@asStream` declarative and sets its `getComponentStream` method to your custom method.
+`createDeclarative` uses `@subscribe` declarative and sets its `getComponentStream` method to your custom method.
 
 ## Lifecycle Events
 
