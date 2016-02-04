@@ -22,7 +22,7 @@ const getEventName = x => _.chain(x.replace('component', '')).snakeCase().toUppe
 
 module.exports = component => {
   /**
-   * Do not apply the asStream decorator if applied already
+   * Do not apply the createComponentStream decorator if applied already
    */
   if (component[STREAM_KEY]) {
     return component

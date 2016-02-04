@@ -5,11 +5,11 @@
 'use strict'
 
 import test from 'ava'
-import {asStream} from '../src/index'
+import createComponentStream from '../src/createComponentStream'
 
 test('disposes via addDisposable()', t => {
   const events = []
-  const Temp = asStream(
+  const Temp = createComponentStream(
     class Temp {
       getInstanceStream (stateStream, dispose) {
         dispose(stateStream.subscribe(x => events.push(x.event)))
@@ -34,7 +34,7 @@ test('disposes via addDisposable()', t => {
 
 test('addDisposable must support multiple args', t => {
   const events = []
-  const Temp = asStream(
+  const Temp = createComponentStream(
     class Temp {
       getInstanceStream (stateStream, dispose) {
         dispose(
@@ -73,7 +73,7 @@ test('addDisposable must support multiple args', t => {
 test('disposes only once', t => {
   const events = []
   var i = 0
-  const Temp = asStream(
+  const Temp = createComponentStream(
     class Temp {
       getInstanceStream (stateStream, dispose) {
         dispose({dispose: () => events.push(i++)})
@@ -92,7 +92,7 @@ test('disposes only once', t => {
 test('create separate lifecycle streams per instance', t => {
   const eventsFirst = []
   const eventsSecond = []
-  const Temp = asStream(
+  const Temp = createComponentStream(
     class Temp {
       constructor (instance, eventsContainer) {
         this.instance = instance
@@ -125,7 +125,7 @@ test('create separate lifecycle streams per instance', t => {
 test('create separate lifecycle streams per decoration', t => {
   const eventsFirst = []
   const eventsSecond = []
-  const A = asStream(
+  const A = createComponentStream(
     class A {
       constructor (instance, eventsContainer) {
         this.instance = instance
@@ -138,7 +138,7 @@ test('create separate lifecycle streams per decoration', t => {
         }))
       }
     })
-  const B = asStream(
+  const B = createComponentStream(
     class B {
       constructor (instance, eventsContainer) {
         this.instance = instance
@@ -170,7 +170,7 @@ test('create separate lifecycle streams per decoration', t => {
 
 test('dispatch custom events', t => {
   const events = []
-  const Temp = asStream(
+  const Temp = createComponentStream(
     class Temp {
       getInstanceStream (stateStream, dispose) {
         dispose(stateStream.subscribe(x => events.push(x)))

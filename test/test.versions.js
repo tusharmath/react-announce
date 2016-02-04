@@ -5,15 +5,15 @@
 'use strict'
 
 import test from 'ava'
-const moduleName = '../src/asStream'
-const asStream1 = require(moduleName)
+const moduleName = '../src/createComponentStream'
+const createComponentStream1 = require(moduleName)
 delete require.cache[require.resolve(moduleName)]
-const asStream2 = require(moduleName)
+const createComponentStream2 = require(moduleName)
 
 test('works with multiple versions', t => {
   const eventsFirst = []
 
-  const Temp = asStream2(asStream1(
+  const Temp = createComponentStream2(createComponentStream1(
     class Temp {
       constructor (instance, eventsContainer) {
         this.instance = instance

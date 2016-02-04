@@ -5,12 +5,12 @@
 'use strict'
 
 const _ = require('lodash')
-const asStream = require('./asStream')
+const createComponentStream = require('./createComponentStream')
 const addEventListener = require('./addEventListener')
 
 module.exports = function (func) {
   const declaratives = _.filter(_.toArray(arguments).slice(1), _.isFunction)
-  declaratives.push(asStream)
+  declaratives.push(createComponentStream)
   var f = function () {
     const args = _.toArray(arguments)
     const params = _.initial(args)

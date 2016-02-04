@@ -4,10 +4,9 @@
 
 'use strict'
 
-const asStream = require('./asStream')
 const addEventListener = require('./addEventListener')
 const createDeclarative = require('./createDeclarative')
 
 module.exports = {
-  asStream, createDeclarative, addEventListener
+  createDeclarative, addEventListener
 }
