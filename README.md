@@ -107,7 +107,7 @@ const timer = createDeclarative(function (stream, dispose, interval, stateProper
     stream.filter(x => x.event === 'WILL_MOUNT')
     .map(() => Date.now())
     .combineLatest(time, (t1, t2) => t2 - t1)
-    .subscribe(x => {[stateProperty]: x})
+    .subscribe(x => this.setState({[stateProperty]: x}))
   )
 })
 
