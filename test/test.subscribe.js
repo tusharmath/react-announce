@@ -6,11 +6,11 @@
 
 import {Subject} from 'rx'
 import test from 'ava'
-import subscribe from '../src/subscribe'
-import {subscribe as eSubscribe} from '../src/index'
+import asStream from '../src/asStream'
+import {asStream as eAsStream} from '../src/index'
 
 test(t => {
-  t.is(eSubscribe, subscribe)
+  t.is(eAsStream, asStream)
 })
 
 test(t => {
@@ -18,7 +18,7 @@ test(t => {
   class Mock {
   }
   const fakeStore = new Subject()
-  const MockH = subscribe(fakeStore)(Mock)
+  const MockH = asStream(fakeStore)(Mock)
   const m = new MockH()
   fakeStore.subscribe(x => out.push(x.event))
   m.componentWillMount()
@@ -31,7 +31,7 @@ test('dispose', t => {
   class Mock {
   }
   const fakeStore = new Subject()
-  const MockH = subscribe(fakeStore)(Mock)
+  const MockH = asStream(fakeStore)(Mock)
   const m = new MockH()
   fakeStore.subscribe(x => out.push(x.event))
   m.componentWillMount()
@@ -53,7 +53,7 @@ test('multiple', t => {
   const fakeStore0 = new Subject()
   const fakeStore1 = new Subject()
 
-  const MockH = subscribe(fakeStore0, fakeStore1)(Mock)
+  const MockH = asStream(fakeStore0, fakeStore1)(Mock)
   const m = new MockH()
   fakeStore0.subscribe(x => out0.push(x.event))
   fakeStore1.subscribe(x => out1.push(x.event))
@@ -72,7 +72,7 @@ test('multi-instance', t => {
     }
   }
   const fakeStore = new Subject()
-  const MockH = subscribe(fakeStore)(Mock)
+  const MockH = asStream(fakeStore)(Mock)
   const m0 = new MockH(0)
   const m1 = new MockH(1)
   fakeStore.subscribe(x => out.push({i: x.component.instance, e: x.event}))
@@ -96,7 +96,7 @@ test('empty', t => {
       stream.subscribe(x => out.push(x.event))
     }
   }
-  const MockH = subscribe()(Mock)
+  const MockH = asStream()(Mock)
   const m0 = new MockH()
 
   m0.componentWillMount()

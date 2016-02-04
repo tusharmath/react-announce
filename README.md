@@ -8,15 +8,15 @@ npm i react-announce --save
 ```
 ## API
 
-### @subscribe
-`@subscribe()` decorator lets any observer subscribe to the [lifecycle events][1] *(and also custom events that we will see later)* of the component.
+### @asStream
+`@asStream()` decorator lets any observer subscribe to the [lifecycle events][1] *(and also custom events that we will see later)* of the component.
 
 ```javascript
 const Rx = require('rx')
 const observerA = Rx.Observer.create(x => console.log('A', x))
 const observerB = Rx.Observer.create(x => console.log('B', x))
 
-@subscribe(observerA, observerB)
+@asStream(observerA, observerB)
 class MyComponent extends Component {
   render () {
     return (<div>Hello World!</div>)
@@ -52,7 +52,7 @@ B {event: 'DID_MOUNT', args: [], component: MyComponent {}}
 Exposes the component events of only the CURRENT instance, as a stream and is always called with context of that instance. It is called as soon as the component is mounted.
 
 ```javascript
-@subscribe()
+@asStream()
 class MyComponent extends Component {
   getInstanceStream (stream, dispose) {
     //{stream} exposes events of only the current instance of the component.
@@ -71,7 +71,7 @@ The component gets a special function named `dispatch()` which enables us to dis
 
 ```javascript
 
-@subscribe()
+@asStream()
 class MyComponent extends Component {
   onClick () {
     /*
@@ -124,7 +124,7 @@ class MyComponent extends Component {
 // Keeps printing the elapsed time which gets updated ever 100ms
 ```
 
-`createDeclarative` uses `@subscribe` declarative and sets its `getInstanceStream` method to your custom method.
+`createDeclarative` uses `@asStream` declarative and sets its `getInstanceStream` method to your custom method.
 
 ## Lifecycle Events
 
