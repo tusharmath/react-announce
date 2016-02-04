@@ -5,11 +5,10 @@
 'use strict'
 
 import test from 'ava'
-const moduleName = '../src/index'
-const asStream1 = require(moduleName).asStream
-delete require.cache[require.resolve('../src/asStream')]
+const moduleName = '../src/asStream'
+const asStream1 = require(moduleName)
 delete require.cache[require.resolve(moduleName)]
-const asStream2 = require(moduleName).asStream
+const asStream2 = require(moduleName)
 
 test('works with multiple versions', t => {
   const eventsFirst = []
