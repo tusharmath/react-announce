@@ -4,9 +4,10 @@
 
 'use strict'
 
+const subscribe = require('./subscribe')
 const addEventListener = require('./addEventListener')
 const createDeclarative = require('./createDeclarative')
 
 module.exports = {
-  createDeclarative, addEventListener
+  createDeclarative, addEventListener, subscribe
 }

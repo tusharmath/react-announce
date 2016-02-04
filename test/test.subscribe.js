@@ -7,6 +7,11 @@
 import {Subject} from 'rx'
 import test from 'ava'
 import subscribe from '../src/subscribe'
+import {subscribe as eSubscribe} from '../src/index'
+
+test(t => {
+  t.is(eSubscribe, subscribe)
+})
 
 test(t => {
   const out = []
