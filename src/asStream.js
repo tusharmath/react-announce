@@ -31,7 +31,7 @@ module.exports = component => {
     stream.onNext({component: this, event, args})
   })
 
-  _.defaults(component.prototype, {getComponentStream: _.noop, dispatch})
+  _.defaults(component.prototype, {getInstanceStream: _.noop, dispatch})
   const listen = _.partial(addEventListener, component)
   const stream = component[STREAM_KEY] = new BehaviorSubject({component: null, event: null, args: null})
 
@@ -50,7 +50,7 @@ module.exports = component => {
 
   listen('componentWillMount', function () {
     this[DISPOSABLE_KEY] = []
-    this.getComponentStream(stream.filter(x => x.component === this), addDisposable.bind(this))
+    this.getInstanceStream(stream.filter(x => x.component === this), addDisposable.bind(this))
   })
   listen('componentWillUnmount', function () {
     _.each(this[DISPOSABLE_KEY], x => x.dispose())
@@ -58,4 +58,3 @@ module.exports = component => {
 
   return component
 }
-

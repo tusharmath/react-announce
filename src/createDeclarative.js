@@ -15,11 +15,10 @@ module.exports = function (func) {
     const args = _.toArray(arguments)
     const params = _.initial(args)
     const component = _.spread(_.flow)(declaratives)(_.last(args))
-    addEventListener(component, 'getComponentStream', function (stream, dispose) {
+    addEventListener(component, 'getInstanceStream', function (stream, dispose) {
       func.apply(this, [stream, dispose].concat(params))
     })
     return component
   }
   return _.curry(f, func.length - 1)
 }
-

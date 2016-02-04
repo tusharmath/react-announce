@@ -21,7 +21,7 @@ test('works with multiple versions', t => {
         this.eventsContainer = eventsContainer
       }
 
-      getComponentStream (stateStream, dispose) {
+      getInstanceStream (stateStream, dispose) {
         dispose(stateStream.subscribe(x => {
           this.eventsContainer.push({event: x.event, instance: this.instance})
         }))

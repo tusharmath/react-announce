@@ -11,7 +11,7 @@ test('disposes via addDisposable()', t => {
   const events = []
   const Temp = asStream(
     class Temp {
-      getComponentStream (stateStream, dispose) {
+      getInstanceStream (stateStream, dispose) {
         dispose(stateStream.subscribe(x => events.push(x.event)))
       }
     })
@@ -36,7 +36,7 @@ test('addDisposable must support multiple args', t => {
   const events = []
   const Temp = asStream(
     class Temp {
-      getComponentStream (stateStream, dispose) {
+      getInstanceStream (stateStream, dispose) {
         dispose(
           stateStream.subscribe(x => events.push(x.event)),
           stateStream.subscribe(x => events.push(x.event + '-SECOND')),
@@ -75,7 +75,7 @@ test('disposes only once', t => {
   var i = 0
   const Temp = asStream(
     class Temp {
-      getComponentStream (stateStream, dispose) {
+      getInstanceStream (stateStream, dispose) {
         dispose({dispose: () => events.push(i++)})
       }
     })
@@ -99,7 +99,7 @@ test('create separate lifecycle streams per instance', t => {
         this.eventsContainer = eventsContainer
       }
 
-      getComponentStream (stateStream, dispose) {
+      getInstanceStream (stateStream, dispose) {
         dispose(stateStream.subscribe(x => {
           this.eventsContainer.push({event: x.event, instance: this.instance})
         }))
@@ -132,7 +132,7 @@ test('create separate lifecycle streams per decoration', t => {
         this.eventsContainer = eventsContainer
       }
 
-      getComponentStream (stateStream, dispose) {
+      getInstanceStream (stateStream, dispose) {
         dispose(stateStream.subscribe(x => {
           this.eventsContainer.push({event: x.event, instance: this.instance})
         }))
@@ -145,7 +145,7 @@ test('create separate lifecycle streams per decoration', t => {
         this.eventsContainer = eventsContainer
       }
 
-      getComponentStream (stateStream, dispose) {
+      getInstanceStream (stateStream, dispose) {
         dispose(stateStream.subscribe(x => {
           this.eventsContainer.push({event: x.event, instance: this.instance})
         }))
@@ -172,7 +172,7 @@ test('dispatch custom events', t => {
   const events = []
   const Temp = asStream(
     class Temp {
-      getComponentStream (stateStream, dispose) {
+      getInstanceStream (stateStream, dispose) {
         dispose(stateStream.subscribe(x => events.push(x)))
       }
     })

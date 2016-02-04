@@ -87,7 +87,7 @@ test('multi-instance', t => {
 test('empty', t => {
   const out = []
   class Mock {
-    getComponentStream (stream, dispose) {
+    getInstanceStream (stream, dispose) {
       stream.subscribe(x => out.push(x.event))
     }
   }
@@ -101,4 +101,3 @@ test('empty', t => {
     'WILL_UNMOUNT'
   ])
 })
-
