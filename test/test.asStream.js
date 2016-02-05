@@ -9,7 +9,7 @@ import test from 'ava'
 import asStream from '../src/asStream'
 import {asStream as eAsStream} from '../src/index'
 
-test(t => {
+test('exports', t => {
   t.is(eAsStream, asStream)
 })
 
@@ -45,7 +45,7 @@ test('dispose', t => {
   t.same(out, ['WILL_MOUNT', 'WILL_UNMOUNT', 'WILL_MOUNT', 'WILL_RECEIVE_PROPS', 'WILL_UNMOUNT'])
 })
 
-test('multiple', t => {
+test('multiple:observers', t => {
   const out0 = []
   const out1 = []
   class Mock {
@@ -64,7 +64,7 @@ test('multiple', t => {
   t.same(out1, ['WILL_MOUNT', 'WILL_UNMOUNT'])
 })
 
-test('multi-instance', t => {
+test('multiple:instance', t => {
   const out = []
   class Mock {
     constructor (i) {
