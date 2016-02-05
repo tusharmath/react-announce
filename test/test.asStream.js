@@ -1,192 +1,108 @@
 /**
- * Created by tushar.mathur on 19/12/15.
+ * Created by tushar.mathur on 04/02/16.
  */
 
 'use strict'
 
+import {Subject} from 'rx'
 import test from 'ava'
-import {asStream} from '../src/index'
+import asStream from '../src/asStream'
+import {asStream as eAsStream} from '../src/index'
 
-test('disposes via addDisposable()', t => {
-  const events = []
-  const Temp = asStream(
-    class Temp {
-      getComponentStream (stateStream, dispose) {
-        dispose(stateStream.subscribe(x => events.push(x.event)))
-      }
-    })
-  const tmp = new Temp()
-  tmp.componentWillMount()
-  tmp.componentWillReceiveProps()
-  tmp.componentWillUpdate()
-  tmp.componentDidUpdate()
-  tmp.componentWillUnmount()
-  tmp.componentWillReceiveProps()
-  tmp.componentWillReceiveProps()
-  t.same(events, [
+test('exports', t => {
+  t.is(eAsStream, asStream)
+})
+
+test(t => {
+  const out = []
+  class Mock {
+  }
+  const fakeStore = new Subject()
+  const MockH = asStream(fakeStore)(Mock)
+  const m = new MockH()
+  fakeStore.subscribe(x => out.push(x.event))
+  m.componentWillMount()
+  m.componentWillUnmount()
+  t.same(out, ['WILL_MOUNT', 'WILL_UNMOUNT'])
+})
+
+test('dispose', t => {
+  const out = []
+  class Mock {
+  }
+  const fakeStore = new Subject()
+  const MockH = asStream(fakeStore)(Mock)
+  const m = new MockH()
+  fakeStore.subscribe(x => out.push(x.event))
+  m.componentWillMount()
+  m.componentWillUnmount()
+  m.componentWillReceiveProps()
+  m.componentWillUnmount()
+  m.componentWillMount()
+  m.componentWillReceiveProps()
+  m.componentWillUnmount()
+
+  t.same(out, ['WILL_MOUNT', 'WILL_UNMOUNT', 'WILL_MOUNT', 'WILL_RECEIVE_PROPS', 'WILL_UNMOUNT'])
+})
+
+test('multiple:observers', t => {
+  const out0 = []
+  const out1 = []
+  class Mock {
+  }
+  const fakeStore0 = new Subject()
+  const fakeStore1 = new Subject()
+
+  const MockH = asStream(fakeStore0, fakeStore1)(Mock)
+  const m = new MockH()
+  fakeStore0.subscribe(x => out0.push(x.event))
+  fakeStore1.subscribe(x => out1.push(x.event))
+
+  m.componentWillMount()
+  m.componentWillUnmount()
+  t.same(out0, ['WILL_MOUNT', 'WILL_UNMOUNT'])
+  t.same(out1, ['WILL_MOUNT', 'WILL_UNMOUNT'])
+})
+
+test('multiple:instance', t => {
+  const out = []
+  class Mock {
+    constructor (i) {
+      this.instance = i
+    }
+  }
+  const fakeStore = new Subject()
+  const MockH = asStream(fakeStore)(Mock)
+  const m0 = new MockH(0)
+  const m1 = new MockH(1)
+  fakeStore.subscribe(x => out.push({i: x.component.instance, e: x.event}))
+  m0.componentWillMount()
+  m1.componentWillMount()
+  m0.componentWillUnmount()
+  m1.componentWillUnmount()
+
+  t.same(out, [
+    {i: 0, e: 'WILL_MOUNT'},
+    {i: 1, e: 'WILL_MOUNT'},
+    {i: 0, e: 'WILL_UNMOUNT'},
+    {i: 1, e: 'WILL_UNMOUNT'}
+  ])
+})
+
+test('empty', t => {
+  const out = []
+  class Mock {
+    getInstanceStream (stream, dispose) {
+      stream.subscribe(x => out.push(x.event))
+    }
+  }
+  const MockH = asStream()(Mock)
+  const m0 = new MockH()
+
+  m0.componentWillMount()
+  m0.componentWillUnmount()
+  t.same(out, [
     'WILL_MOUNT',
-    'WILL_RECEIVE_PROPS',
-    'WILL_UPDATE',
-    'DID_UPDATE',
     'WILL_UNMOUNT'
-  ])
-})
-
-test('addDisposable must support multiple args', t => {
-  const events = []
-  const Temp = asStream(
-    class Temp {
-      getComponentStream (stateStream, dispose) {
-        dispose(
-          stateStream.subscribe(x => events.push(x.event)),
-          stateStream.subscribe(x => events.push(x.event + '-SECOND')),
-          stateStream.subscribe(x => events.push(x.event + '-THIRD'))
-        )
-      }
-    })
-  const tmp = new Temp()
-  tmp.componentWillMount()
-  tmp.componentWillReceiveProps()
-  tmp.componentWillUpdate()
-  tmp.componentDidUpdate()
-  tmp.componentWillUnmount()
-  tmp.componentWillReceiveProps()
-  tmp.componentWillReceiveProps()
-  t.same(events, [
-    'WILL_MOUNT',
-    'WILL_MOUNT-SECOND',
-    'WILL_MOUNT-THIRD',
-    'WILL_RECEIVE_PROPS',
-    'WILL_RECEIVE_PROPS-SECOND',
-    'WILL_RECEIVE_PROPS-THIRD',
-    'WILL_UPDATE',
-    'WILL_UPDATE-SECOND',
-    'WILL_UPDATE-THIRD',
-    'DID_UPDATE',
-    'DID_UPDATE-SECOND',
-    'DID_UPDATE-THIRD',
-    'WILL_UNMOUNT',
-    'WILL_UNMOUNT-SECOND',
-    'WILL_UNMOUNT-THIRD'
-  ])
-})
-test('disposes only once', t => {
-  const events = []
-  var i = 0
-  const Temp = asStream(
-    class Temp {
-      getComponentStream (stateStream, dispose) {
-        dispose({dispose: () => events.push(i++)})
-      }
-    })
-  const t1 = new Temp()
-  const t2 = new Temp()
-  t1.componentWillMount()
-  t1.componentWillUnmount()
-  t2.componentWillMount()
-  t2.componentWillUnmount()
-
-  t.same(events, [0, 1])
-})
-
-test('create separate lifecycle streams per instance', t => {
-  const eventsFirst = []
-  const eventsSecond = []
-  const Temp = asStream(
-    class Temp {
-      constructor (instance, eventsContainer) {
-        this.instance = instance
-        this.eventsContainer = eventsContainer
-      }
-
-      getComponentStream (stateStream, dispose) {
-        dispose(stateStream.subscribe(x => {
-          this.eventsContainer.push({event: x.event, instance: this.instance})
-        }))
-      }
-    })
-  const t1 = new Temp('first', eventsFirst)
-  const t2 = new Temp('second', eventsSecond)
-  t1.componentWillMount()
-  t2.componentWillMount()
-  t1.componentWillUnmount()
-  t2.componentWillUnmount()
-  t.same(eventsFirst, [
-    {event: 'WILL_MOUNT', instance: 'first'},
-    {event: 'WILL_UNMOUNT', instance: 'first'}
-  ])
-
-  t.same(eventsSecond, [
-    {event: 'WILL_MOUNT', instance: 'second'},
-    {event: 'WILL_UNMOUNT', instance: 'second'}
-  ])
-})
-
-test('create separate lifecycle streams per decoration', t => {
-  const eventsFirst = []
-  const eventsSecond = []
-  const A = asStream(
-    class A {
-      constructor (instance, eventsContainer) {
-        this.instance = instance
-        this.eventsContainer = eventsContainer
-      }
-
-      getComponentStream (stateStream, dispose) {
-        dispose(stateStream.subscribe(x => {
-          this.eventsContainer.push({event: x.event, instance: this.instance})
-        }))
-      }
-    })
-  const B = asStream(
-    class B {
-      constructor (instance, eventsContainer) {
-        this.instance = instance
-        this.eventsContainer = eventsContainer
-      }
-
-      getComponentStream (stateStream, dispose) {
-        dispose(stateStream.subscribe(x => {
-          this.eventsContainer.push({event: x.event, instance: this.instance})
-        }))
-      }
-    })
-  const t1 = new A('first', eventsFirst)
-  const t2 = new B('second', eventsSecond)
-  t1.componentWillMount()
-  t2.componentWillMount()
-  t1.componentWillUnmount()
-  t2.componentWillUnmount()
-  t.same(eventsFirst, [
-    {event: 'WILL_MOUNT', instance: 'first'},
-    {event: 'WILL_UNMOUNT', instance: 'first'}
-  ])
-
-  t.same(eventsSecond, [
-    {event: 'WILL_MOUNT', instance: 'second'},
-    {event: 'WILL_UNMOUNT', instance: 'second'}
-  ])
-})
-
-test('dispatch custom events', t => {
-  const events = []
-  const Temp = asStream(
-    class Temp {
-      getComponentStream (stateStream, dispose) {
-        dispose(stateStream.subscribe(x => events.push(x)))
-      }
-    })
-  const tmp = new Temp()
-  tmp.dispatch('ALPHA', '0', '0', '0')
-  tmp.componentWillMount()
-  tmp.dispatch('BRAVO', '1', '1', '1')
-  tmp.dispatch('CHARLIE', '2', '2')
-  tmp.componentWillUnmount()
-  tmp.dispatch('DELTA', '3')
-  t.same(events, [
-    {component: tmp, event: 'WILL_MOUNT', args: []},
-    {component: tmp, event: 'BRAVO', args: ['1', '1', '1']},
-    {component: tmp, event: 'CHARLIE', args: ['2', '2']},
-    {component: tmp, event: 'WILL_UNMOUNT', args: []}
   ])
 })
