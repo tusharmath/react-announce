@@ -40,7 +40,11 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
+  "publishConfig": {
+    "tag": "stable"
+  },
   "release": {
+    "branch": "stable",
     "verifyRelease": {
       "path": "cracks",
       "paths": [
