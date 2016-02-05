@@ -136,6 +136,14 @@ class MyComponent extends Component {
 - `WILL_UNMOUNT`
 
 
+## Release Channels
+
+There are two release channels — **@stable** & **@latest**
+
+```
+npm i react-announce@stable --save
+npm i react-announce@latest --save
+```
 
 ## Available Declaratives [npm](https://www.npmjs.com/search?q=react-announce)
 
