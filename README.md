@@ -67,32 +67,33 @@ class MyComponent extends Component {
 The second param is `dispose` which disposes the subscription as soon as the component unmounts. This frees up the allocated memory and improves performance.
 
 ### dispatch(string: event, ...args)
-The component gets a special function named `dispatch()` which enables us to dispatch custom events.
+The component gets a special function named `dispatch()` which enables us to dispatch custom events. This is a very powerful feature, as it removes the need of passing loads of callbacks to the deepest level of components. For example —
 
 ```javascript
+const bus = new Rx.Subject()
 
-@asStream()
+@asStream(bus)
 class MyComponent extends Component {
-  onClick () {
+
+  onClick (e) {
     /*
     * The first param is used as the name of the event
     * Rest of the params are passed as the `args` property to the component stream.
     **/
-    this.dispatch('CLICKED', this.state.count + 1)
+    this.dispatch('CLICKED', e)
   }
-  getInstanceStream (stream, dispose) {
-    dispose(
-      stream.filter(x => x.event === 'CLICKED')
-      .map(x => x.args[0])
-      .subscribe(count => this.setState({count}))
-    )
-  }
+
   render () {
-    return (<div onClick={this.onClick.bind(this)}>Hello World! {this.state.count}</div>)
+    return (<div onClick={this.onClick.bind(this)}>Hello World!</div>)
   }
 }
+
+bus.subscribe(x => console.log(x))
 ```
 
+Here the `bus` object can be accessed globally for any kind of internal event that is fired. There is no need of passing a callback to this component for the `onClick` event, instead I can directly subscribe to the `bus`.
+
+**IMPORTANT** This functionality can soon become a problem if all the component's start exposing streams. Use this feature ONLY if a component has a lot of interactions built into it. For example — A form component which has multiple text boxes and dropdowns.
 
 ## Extensions
 
