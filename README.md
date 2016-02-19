@@ -1,4 +1,4 @@
-# react-announce [![Build Status][2]][3] [![npm][4]]()
+# react-announce [![Build Status][2]][3] [![npm][4]][6]
 A declarative approach to writing react components. Enables reuse of **component behaviors**.
 
 ## Installation
@@ -161,3 +161,4 @@ npm i react-announce@latest --save
 [3]: https://travis-ci.org/tusharmath/react-announce
 [4]: https://img.shields.io/npm/v/react-announce.svg
 [5]: https://en.wikipedia.org/wiki/Cross-cutting_concern
+[6]: https://www.npmjs.com/package/react-announce
