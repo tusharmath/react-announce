@@ -152,6 +152,7 @@ npm i react-announce@latest --save
 * [react-announce-size](https://github.com/tusharmath/react-announce-size): Exposes a component's size as a stream.
 * [react-announce-fetch](https://github.com/tusharmath/react-announce-fetch): Sync data store across multiple components over REST.
 * [react-announce-draggable](https://github.com/tusharmath/react-announce-draggable): Exposes component's drag and drop events as a stream.
+* [react-announce-collapse](https://github.com/tusharmath/react-announce-collapse): A reusable decorator for converting any component into a collapsable component.
 * [Need more?](https://github.com/tusharmath/react-announce/issues/new)
 
 
