@@ -3,22 +3,19 @@
  */
 
 'use strict'
-const _ = require('lodash')
 const BehaviorSubject = require('rx').BehaviorSubject
 const addEventListener = require('./addEventListener')
-
-const isDisposable = i => _.isFunction(_.get(i, 'dispose'))
+const getInstanceStream = () => void 0
 const STREAM_KEY = '__componentStream__'
 const DISPOSABLE_KEY = '__disposables__'
-const LIFECYCLE_EVENTS = [
-  'componentWillMount',
-  'componentDidMount',
-  'componentWillReceiveProps',
-  'componentWillUpdate',
-  'componentDidUpdate',
-  'componentWillUnmount'
-]
-const getEventName = x => _.chain(x.replace('component', '')).snakeCase().toUpper().value()
+const LIFECYCLE_EVENTS = {
+  'componentWillMount': 'WILL_MOUNT',
+  'componentDidMount': 'DID_MOUNT',
+  'componentWillReceiveProps': 'WILL_RECEIVE_PROPS',
+  'componentWillUpdate': 'WILL_UPDATE',
+  'componentDidUpdate': 'DID_UPDATE',
+  'componentWillUnmount': 'WILL_UNMOUNT'
+}
 
 module.exports = component => {
   /**
@@ -27,23 +24,33 @@ module.exports = component => {
   if (component[STREAM_KEY]) {
     return component
   }
-  const dispatch = _.rest(function (event, args) {
+  const dispatch = function (event) {
+    const args = [].slice.call(arguments, 1)
     stream.onNext({component: this, event, args})
-  })
+  }
 
-  _.defaults(component.prototype, {getInstanceStream: _.noop, dispatch})
-  const listen = _.partial(addEventListener, component)
+  const defaultProto = {getInstanceStream, dispatch}
+
+  Object
+    .keys(defaultProto)
+    .filter(x => !component.prototype[x])
+    .forEach(x => component.prototype[x] = defaultProto[x])
+
+  const listen = function () {
+    const args = [].slice.call(arguments, 0)
+    return addEventListener.apply(this, [component, ...args])
+  }
   const stream = component[STREAM_KEY] = new BehaviorSubject({component: null, event: null, args: null})
 
   const addDisposable = function () {
-    const args = _.toArray(arguments)
-    _.filter(args, isDisposable).forEach(x => this[DISPOSABLE_KEY].push(x))
+    const args = [].slice.call(arguments, 0)
+    args.forEach(x => this[DISPOSABLE_KEY].push(x))
   }
 
-  _.each(LIFECYCLE_EVENTS, x => {
-    var event = getEventName(x)
+  Object.keys(LIFECYCLE_EVENTS).forEach(x => {
+    const event = LIFECYCLE_EVENTS[x]
     listen(x, function () {
-      const args = _.toArray(arguments)
+      const args = [].slice.call(arguments, 0)
       stream.onNext({component: this, event, args})
     })
   })
@@ -53,7 +60,7 @@ module.exports = component => {
     this.getInstanceStream(stream.filter(x => x.component === this), addDisposable.bind(this))
   })
   listen('componentWillUnmount', function () {
-    _.each(this[DISPOSABLE_KEY], x => x.dispose())
+    this[DISPOSABLE_KEY].forEach(x => x.dispose())
   })
 
   return component
