@@ -4,17 +4,14 @@
 
 'use strict'
 
-const _ = require('lodash')
 const createComponentStream = require('./createComponentStream')
 const addEventListener = require('./addEventListener')
 
 module.exports = function (func) {
-  const declaratives = _.filter(_.toArray(arguments).slice(1), _.isFunction)
-  declaratives.push(createComponentStream)
   return function () {
-    const params = _.toArray(arguments)
+    const params = [].slice.call(arguments)
     return function (component) {
-      component = _.spread(_.flow)(declaratives)(component)
+      component = createComponentStream(component)
       addEventListener(component, 'getInstanceStream', function (stream, dispose) {
         func.apply(this, [stream, dispose].concat(params))
       })
