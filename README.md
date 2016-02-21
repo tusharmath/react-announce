@@ -1,4 +1,8 @@
-# react-announce [![Build Status][2]][3] [![npm][4]][6]
+# react-announce
+[![Build Status][2]][3]
+[![npm][4]][6]
+[![Coverage Status][coverage-svg]][coverage]
+
 A declarative approach to writing react components. Enables reuse of **component behaviors**.
 
 ## Installation
@@ -162,3 +166,5 @@ npm i react-announce@latest --save
 [4]: https://img.shields.io/npm/v/react-announce.svg
 [5]: https://en.wikipedia.org/wiki/Cross-cutting_concern
 [6]: https://www.npmjs.com/package/react-announce
+[coverage-svg]: https://coveralls.io/repos/github/tusharmath/react-announce/badge.svg?branch=coverall
+[coverage]: https://coveralls.io/github/tusharmath/react-announce?branch=coverall
