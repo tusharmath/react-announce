@@ -166,5 +166,5 @@ npm i react-announce@latest --save
 [4]: https://img.shields.io/npm/v/react-announce.svg
 [5]: https://en.wikipedia.org/wiki/Cross-cutting_concern
 [6]: https://www.npmjs.com/package/react-announce
-[coverage-svg]: https://coveralls.io/repos/github/tusharmath/react-announce/badge.svg?branch=coverall
-[coverage]: https://coveralls.io/github/tusharmath/react-announce?branch=coverall
+[coverage-svg]: https://coveralls.io/repos/github/tusharmath/react-announce/badge.svg?branch=master
+[coverage]: https://coveralls.io/github/tusharmath/react-announce?branch=master
