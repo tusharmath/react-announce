@@ -1,4 +1,6 @@
 # react-announce
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/tusharmath/react-announce.svg)](https://greenkeeper.io/)
 [![Build Status][2]][3]
 [![npm][4]][6]
 [![Coverage Status][coverage-svg]][coverage]
